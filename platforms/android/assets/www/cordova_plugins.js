@@ -341,6 +341,14 @@ module.exports = [
         "clobbers": [
             "YoutubeVideoPlayer"
         ]
+    },
+    {
+        "id": "cordova-plugin-calendar.Calendar",
+        "file": "plugins/cordova-plugin-calendar/www/Calendar.js",
+        "pluginId": "cordova-plugin-calendar",
+        "clobbers": [
+            "Calendar"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -364,7 +372,8 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.2.2",
     "cordova-plugin-x-socialsharing": "5.1.3",
     "es6-promise-plugin": "4.1.0",
-    "com.bunkerpalace.cordova.YoutubeVideoPlayer": "1.0.5"
+    "com.bunkerpalace.cordova.YoutubeVideoPlayer": "1.0.5",
+    "cordova-plugin-calendar": "4.6.0"
 };
 // BOTTOM OF METADATA
 });

@@ -344,7 +344,7 @@ module.exports = {
     , refresh: refresh
     , getFeedsFromConfig: getFeedsFromConfig
 };
-},{"../io/createFileWithContents":28,"../io/doesFileExist":29,"../io/downloadExternalFile":30,"../io/getFile":32,"../io/getFileContents":33,"../io/getFileList":35,"../io/removeFile":40,"../io/writeFile":41,"../util/notify":45,"./config":8,"./config-menu":6,"./xmlToJson":24}],2:[function(require,module,exports){
+},{"../io/createFileWithContents":30,"../io/doesFileExist":31,"../io/downloadExternalFile":32,"../io/getFile":34,"../io/getFileContents":35,"../io/getFileList":37,"../io/removeFile":42,"../io/writeFile":43,"../util/notify":47,"./config":8,"./config-menu":6,"./xmlToJson":26}],2:[function(require,module,exports){
 module.exports = {
     track: true
     , trackId: 'UA-31877-35'
@@ -412,7 +412,7 @@ function getBlogs (key) {
 }
 
 module.exports = getBlogs(getKey());
-},{"./ui/getKeyForLanguageOrLocalCenter":14,"./ui/getLocalizedString":15,"./ui/localizedStrings":18}],4:[function(require,module,exports){
+},{"./ui/getKeyForLanguageOrLocalCenter":15,"./ui/getLocalizedString":16,"./ui/localizedStrings":19}],4:[function(require,module,exports){
 var toLocal = require('./ui/getLocalizedString')
     , localStrings = require('./ui/localizedStrings')
     , getKey = require('./ui/getKeyForLanguageOrLocalCenter');
@@ -568,7 +568,7 @@ function getExplore (key) {
 }
 
 module.exports = getExplore(getKey());
-},{"./ui/getKeyForLanguageOrLocalCenter":14,"./ui/getLocalizedString":15,"./ui/localizedStrings":18}],5:[function(require,module,exports){
+},{"./ui/getKeyForLanguageOrLocalCenter":15,"./ui/getLocalizedString":16,"./ui/localizedStrings":19}],5:[function(require,module,exports){
 var toLocal = require('./ui/getLocalizedString')
     , localStrings = require('./ui/localizedStrings');
 
@@ -585,7 +585,7 @@ var menus = [{
 }];
 
 module.exports = menus;
-},{"./ui/getLocalizedString":15,"./ui/localizedStrings":18}],6:[function(require,module,exports){
+},{"./ui/getLocalizedString":16,"./ui/localizedStrings":19}],6:[function(require,module,exports){
 var feeds = require('./config-feeds')
     , blogs = require('./config-blogs')
     , resources = require('./config-resources')
@@ -796,7 +796,7 @@ function getResources (key) {
 }
 
 module.exports = getResources(getKey());
-},{"./ui/getKeyForLanguageOrLocalCenter":14,"./ui/getLocalizedString":15,"./ui/localizedStrings":18}],8:[function(require,module,exports){
+},{"./ui/getKeyForLanguageOrLocalCenter":15,"./ui/getLocalizedString":16,"./ui/localizedStrings":19}],8:[function(require,module,exports){
 /*global module, require*/
 var analyticsConfig = require('./analyticsConfig')
 	, toLocal = require('./ui/getLocalizedString')
@@ -814,7 +814,7 @@ module.exports = {
 	, missingImage: 'http://carnegieendowment.org/app-img-not-avail.png'
 	, missingImageRef: void 0
 };
-},{"./analyticsConfig":2,"./ui/getLocalizedString":15,"./ui/localizedStrings":18}],9:[function(require,module,exports){
+},{"./analyticsConfig":2,"./ui/getLocalizedString":16,"./ui/localizedStrings":19}],9:[function(require,module,exports){
 module.exports = function () {
 	var config = require('./config')
 		, notify = require('../util/notify')
@@ -845,7 +845,7 @@ module.exports = function () {
 		doesFileExist(config.missingImage.split('/').pop()).then(init, getImage);
 	})
 }
-},{"../io/doesFileExist":29,"../io/downloadExternalFile":30,"../util/notify":45,"./config":8,"./ui/getLocalizedString":15,"./ui/localizedStrings":18}],10:[function(require,module,exports){
+},{"../io/doesFileExist":31,"../io/downloadExternalFile":32,"../util/notify":47,"./config":8,"./ui/getLocalizedString":16,"./ui/localizedStrings":19}],10:[function(require,module,exports){
 var header = require('./ui/header');
 document.addEventListener("backbutton", onBackKeyDown, false);
 
@@ -857,7 +857,7 @@ function onBackKeyDown(e) {
     return false;
 }
 
-},{"./ui/header":16}],11:[function(require,module,exports){
+},{"./ui/header":17}],11:[function(require,module,exports){
 module.exports = {
     isMySchedule: isMySchedule
     , set: set
@@ -965,9 +965,9 @@ module.exports = {
     , remove: remove
 };
 
-var storeKey = "LocalSchedule";
+var storeKey = "LocalRegister";
 
-// string id adds event to calendar
+// string id adds event to register
 function add (id) {
     var o = get() || {};
     o[id] = 1;
@@ -976,14 +976,14 @@ function add (id) {
     }
 }
 
-// string id adds event to calendar
+// string id returns true if exists
 function has (id) {
     var o = get() || {};
     return o[id] === 1;
 }
 
 
-// string id adds event to calendar
+// string id removes event from register
 function remove (id) {
     var o = get() || {};
     if (has(id)) {
@@ -1015,11 +1015,67 @@ function get () {
     }
 }
 },{}],14:[function(require,module,exports){
+module.exports = {
+    add: add
+    , has: has
+    , remove: remove
+};
+
+var storeKey = "LocalSchedule";
+
+// string id adds event to calendar
+function add (id) {
+    var o = get() || {};
+    o[id] = 1;
+    if (window !== undefined && window.localStorage !== undefined) {
+        window.localStorage.setItem(storeKey, JSON.stringify(o));
+    }
+}
+
+// string id returns true if exists
+function has (id) {
+    var o = get() || {};
+    return o[id] === 1;
+}
+
+
+// string id removes event from calendar
+function remove (id) {
+    var o = get() || {};
+    if (has(id)) {
+        delete o[id];
+    }
+    if (window !== undefined && window.localStorage !== undefined) {
+        window.localStorage.setItem(storeKey, JSON.stringify(o));
+    }
+}
+
+// get local stored hash of events
+function get () {
+    if (window !== undefined && window.localStorage !== undefined) {
+        var dict = window.localStorage.getItem(storeKey);
+        var parsed = false;
+        if (dict != null) {
+            try {
+                dict = JSON.parse(dict);
+                parsed = true;
+            } catch (e) {
+                dict = null;
+                window.localStorage.removeItem(storeKey);
+            }
+        }
+        if (parsed == true) {
+            return dict;
+        }
+        return null;
+    }
+}
+},{}],15:[function(require,module,exports){
 module.exports = function () {
     return window.__languageForCarnegie || window.__localCenter || "en";
 };
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = function (options, language) {
     if (options !== undefined) {
         if (language !== undefined) {
@@ -1045,25 +1101,25 @@ module.exports = function (options, language) {
     }
     return void 0
 };
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /*global $, require, module */
 var story = require('./story')
 	, toLocal = require('./getLocalizedString')
 	, localStrings = require('./localizedStrings')
 	, loading = require('./loading')
-	, localProfile = require('../localProfile');
+	, localProfile = require('../localProfile')
+	, video = require('./video');
 
 var youtubeIsActive = false;
 var menuIsActive = false;
 
 $(document)
 	.on('touchend', 'header .show-menu', function (e) {
-		menuIsActive = !menuIsActive;
 		if (youtubeIsActive) {
 			youtubeIsActive = false;
-			removePlayer();
+			$('.show-tv').removeClass('active');
 		}
-		$('header').addClass('stay');
+		menuIsActive = !menuIsActive;
 		if (menuIsActive) {
 			localProfile.setup();
 			showMenu();
@@ -1072,19 +1128,23 @@ $(document)
 			showStoryList();
 		}
 	})
-	.on('touchstart', '.show-tv', function (e) {
-		$(e.currentTarget).addClass('active');
+	.on('touchstart', '.show-tv', function () {
+		$('.show-tv').addClass('active');
 	})
-	.on('touchend', '.show-tv', function (e) {
+	.on('touchend', '.show-tv', function () {
+		if (menuIsActive) {
+			menuIsActive = false;
+			$('.show-menu').removeClass('active');
+		}
 		youtubeIsActive = !youtubeIsActive;
-		setTimeout(function () {
-			if (youtubeIsActive) {
-				createPlayer()
-			} else {
-				$(e.currentTarget).remove('active');
-				removePlayer()
-			}
-		});
+		if (youtubeIsActive) {
+			showTV();
+		} else {
+			showStoryList();
+			setTimeout(function () {
+				$('.show-tv').removeClass('active');
+			}, 100);
+		}
 	})
 	.on('touchstart', 'header .story .back', function (e) {
 		$(e.currentTarget).addClass('active');
@@ -1101,7 +1161,6 @@ $('header a.spanner').on('touchstart', function (e) {
 	e.preventDefault();
 	if (youtubeIsActive === true) {
 		youtubeIsActive = false;
-		removePlayer()
 	}
 });
 
@@ -1147,7 +1206,7 @@ function addListener(className) {
 }
 
 function show(sel) {
-	var sels = ['.menu', '.story', '.story-list', '.show-tv']
+	var sels = ['.menu', '.story', '.story-list', '.tv']
 		, $h = $('header')
 		, $sel = $h.find(sel).stop(true);
 
@@ -1163,30 +1222,32 @@ function show(sel) {
 }
 
 function showStoryList() {
-	$('section.story').removeClass('active');
+	$('section').removeClass('active');
 	$('section.story-list').addClass('active');
-	$('section.menu').removeClass('active');
 	$('footer.story-footer').removeClass('active');
 	show('.story-list');
 	story.hide();
 }
 
-function showTV() {
-	$('section.show-tv').addClass('active');
-	show('.show-tv');
-}
-
 function showMenu() {
+	$('section.tv').removeClass('active');
 	$('section.menu').addClass('active');
 	show('.menu');
 }
 
 function showStory() {
 	$('header').removeClass('stay');
-	$('section.menu').removeClass('active');
+	$('section').removeClass('active');
 	$('footer.story-footer').addClass('active');
 	$('section.story').addClass('active');
 	show('.story');
+}
+
+function showTV() {
+	video.get();
+	$('section.menu').removeClass('active');
+	$('section.tv').addClass('active');
+	show('.tv');
 }
 
 function updateLanguageUI () {
@@ -1200,7 +1261,7 @@ module.exports = {
 	, showStory: showStory
 	, updateLanguageUI: updateLanguageUI
 };
-},{"../localProfile":12,"./getLocalizedString":15,"./loading":17,"./localizedStrings":18,"./story":22}],17:[function(require,module,exports){
+},{"../localProfile":12,"./getLocalizedString":16,"./loading":18,"./localizedStrings":19,"./story":23,"./video":25}],18:[function(require,module,exports){
 function hide (){
     setTimeout(function () {
         $('.loading-ui').fadeOut();
@@ -1221,7 +1282,7 @@ module.exports = {
     hide: hide,
     show: show
 };
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /**
  * Created by kirk on 4/16/16.
  */
@@ -1477,7 +1538,7 @@ module.exports = {
         ru: "Вашингтон"
     }
 };
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /*global module, require, $*/
 
 var config = require('../config')
@@ -1589,7 +1650,7 @@ $('#profile-submit-button').on('click', function (e) {
 	// check items for validation
 	// submit only if ok
 });
-},{"../../io/doesFileExist":29,"../../io/getFileContents":33,"../../util/date":43,"../../util/notify":45,"../access":1,"../config":8,"../config-menu":6,"./getLocalizedString":15,"./header":16,"./loading":17,"./localizedStrings":18,"./storyList":23}],20:[function(require,module,exports){
+},{"../../io/doesFileExist":31,"../../io/getFileContents":35,"../../util/date":45,"../../util/notify":47,"../access":1,"../config":8,"../config-menu":6,"./getLocalizedString":16,"./header":17,"./loading":18,"./localizedStrings":19,"./storyList":24}],21:[function(require,module,exports){
 var access = require('../access');
 
 Hammer.defaults.stop_browser_behavior.touchAction = 'pan-y';
@@ -1824,7 +1885,7 @@ module.exports = {
 }
 
 
-},{"../access":1}],21:[function(require,module,exports){
+},{"../access":1}],22:[function(require,module,exports){
 module.exports = (function () {
   var win = $(window)
     , w = win.width()
@@ -1837,10 +1898,12 @@ module.exports = (function () {
       screen.lockOrientation('portrait');
   }
 }());
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /*global module, require, $*/
 
 var config = require('../config')
+    , localSchedule = require('../localSchedule')
+    , localRegister = require('../localRegister')
 	, access = require('../access')
 	, notify = require('../../util/notify')
     , date = require("../../util/date")
@@ -1894,7 +1957,10 @@ if (browser) {
     var href = $(e.currentTarget).attr('href');
 
     if (href.substr(0, 1) === '#') {
-      if ($('.current').find(href)) {
+      if (href === "#"){
+          e.preventDefault();
+          return false;
+      } else if ($('.current').find(href)) {
         if (config.track && analytics) {
           analytics.trackEvent('Story', 'Link', 'Page Anchor Clicked', 10);
         }
@@ -2044,6 +2110,8 @@ function createPreviousAndNext() {
 function createPage(storyObj) {
     console.log(storyObj);
   return new Promise(function (resolve, reject) {
+      debugger;
+      window.storyObject = storyObj;
     var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
       , image = storyObj.image ? path + storyObj.image.split('/').pop() : config.missingImage
@@ -2093,10 +2161,70 @@ function createPage(storyObj) {
       $(this).prop('src', config.missingImage);
     });
 
+      if ((storyObj.regLink !== undefined) && (storyObj.regLink !== "") && (storyObj.regLink !== null)) {
+          var isRegistered = storyObj.eventID && localRegister.has('' + storyObj.eventID);
+          var registrationLink = $('<a/>', {
+              addClass: "has-ticket",
+              text: isRegistered ? "Registered" : "Register Now"
+          });
+
+          var isAddedToCalendar = storyObj.eventID && localSchedule.has('' + storyObj.eventID);
+
+          var calendarLink = $('<a/>', {
+              addClass: "add-to-calendar",
+              text: isAddedToCalendar ? 'View Event' : "Add to Calendar"
+          });
+
+          var registrationContainer = $('<div/>', {
+              addClass: 'registration-container'
+          });
+
+          registrationContainer.append(registrationLink, calendarLink);
+
+          if (!isRegistered) {
+              registrationLink.on('click', submitForm);
+          }
+          calendarLink.on('click', isAddedToCalendar ? openCalendarLink : openCalendarLink.apply(null, [true]));
+
+          page.append(registrationContainer);
+      }
+
     setTimeout(function () {
       resolve(page)
     }, 0)
   })
+}
+
+function openCalendarLink (isAddedToCalendar) {
+    if (isAddedToCalendar) {
+        window.plugins.calendar.openCalendar(new Date('Oct 10 2018 13:00:00 EST'));
+        return false;
+    }
+
+
+    window.plugins.calendar.createEventWithOptions(
+        "BIG MEETING",
+        "McDonalds",
+        "no",
+        new Date('Oct 10 2018 13:00:00 EST'),
+        new Date('Oct 10 2018 21:00:00 EST'),
+        {},
+        function (e){
+            //localSchedule.add("id");
+            //update add to calendar state to show registered, disable listener
+            //on story load, check registered status and update button onload
+
+            console.log(e);
+            window.plugins.calendar.openCalendar(new Date('Oct 10 2018 13:00:00 EST'),
+                function (e) {
+                    console.log(e);
+                }, function (e) {
+                    console.log(e);
+                });
+        },
+        function (e){console.log(e)}
+    );
+    //title, location, notes, startDate, endDate, options, successCallback, errorCallback
 }
 
 function notLast(id) {
@@ -2169,10 +2297,84 @@ function showAndUpdate(index) {
   });
 }
 
+function submitForm (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var json;
+    var form = document.getElementById('registration-form');
+    if (window.localStorage !== undefined && window.localStorage.LocalProfileSetting !== undefined) {
+        json = JSON.parse(localStorage.LocalProfileSetting);
+        var isRejected = false;
+        ['firstName', 'lastName', 'email', 'organization'].map(function (e) {
+            if (json !== undefined && json[e] !== undefined) {
+                if (json[e] === "") {
+                    if (!isRejected) {
+                        rejectFormSubmission("" + e + " was missing");
+                        isRejected = true;
+                    }
+                }
+            }
+        });
+
+        if (!isEmailValid(json['email'])) {
+            isRejected = true;
+            console.log('email rejected')
+        }
+        //TODO: not just whitespace in fields
+        //
+        if (isRejected === false) {
+            $("#firstnameEventReg").val(json.firstName);
+            $("#lastnameEventReg").val(json.lastName);
+            $("#institutionEventReg").val(json.organization);
+            $("#contactemailEventReg").val(json.email);
+            $("#isPressMember").prop('checked', json.press);
+            $.ajax({
+                url:'http://carnegieendowment.org/events/forms/index.cfm?fa=register',
+                type:'post',
+                data: $('#eventRegistration').serialize(),
+                success: function (e) {
+                    var response;
+                    try {
+                        response = e && JSON.parse(e);
+                    } catch (e) {
+                        console.log('post fail', e);
+                    }
+                    if (response !== undefined) {
+                        console.log('post success', response);
+                        var id = window.storyObject && window.storyObject.eventID;
+                        if (id) {
+                            localRegister.add('' + id);
+                        }
+                    }
+                },
+                error: function (e) {
+                    console.log('post error', e);
+                }
+            });
+        }
+    } else {
+        rejectFormSubmission("no local data available");
+    }
+}
+
+function isEmailValid (email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+function rejectFormSubmission (message) {
+    console.log(message);
+    notify.alert('Tap the gear icon from the story list view to provide your information.')
+}
+
 module.exports = {
-  show: show, next: next, previous: previous, hide: hideTextResize, updateSliderUI: updateSliderUI
+    show: show,
+    next: next,
+    previous: previous,
+    hide: hideTextResize,
+    updateSliderUI: updateSliderUI
 };
-},{"../../util/date":43,"../../util/notify":45,"../access":1,"../config":8}],23:[function(require,module,exports){
+},{"../../util/date":45,"../../util/notify":47,"../access":1,"../config":8,"../localRegister":13,"../localSchedule":14}],24:[function(require,module,exports){
 /*global require, module, $*/
 var config = require('../config')
     , localSchedule = require('../localSchedule')
@@ -2378,7 +2580,66 @@ $(document).on('access.refresh', function (e, obj) {
 module.exports = {
     show: show
 };
-},{"../../util/connection":42,"../../util/date":43,"../../util/notify":45,"../access":1,"../config":8,"../localMenuView":11,"../localSchedule":13,"./getLocalizedString":15,"./header":16,"./loading":17,"./localizedStrings":18,"./refresh":20,"./story":22}],24:[function(require,module,exports){
+},{"../../util/connection":44,"../../util/date":45,"../../util/notify":47,"../access":1,"../config":8,"../localMenuView":11,"../localSchedule":14,"./getLocalizedString":16,"./header":17,"./loading":18,"./localizedStrings":19,"./refresh":21,"./story":23}],25:[function(require,module,exports){
+var youtube = YoutubeVideoPlayer;
+
+function getVideoItems () {
+    $.ajax({
+        url: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=PL19Wqzt3FqEWTAkQ0l_1GksHA4A5oOhvm&key=AIzaSyB7NdoiNVNmdji2qgGLdiyu36keDBRgMyI&maxResults=25',
+        success:function(e){
+            console.log(e);
+            updateVideoList(e);
+        },
+        error: function (e) {
+            debugger;
+        }
+    });
+}
+
+function getBestImage (thumbnails)  {
+    if (thumbnails.standard) {
+        return thumbnails.standard.url;
+    } else if (thumbnails.high) {
+        return thumbnails.high.url;
+    } else {
+        return thumbnails.default.url;
+    }
+}
+
+function createItemDOM (element) {
+    var i = element.snippet;
+    var title = $('<div/>', {
+        text: i.title
+    }), thumb = $('<img/>', {
+        src: getBestImage(i.thumbnails)
+    }), imageZone = $('<div/>', {
+        addClass: 'video-list-item-image'
+    }).append(thumb), textZone = $('<div/>', {
+        addClass: 'video-list-item-text'
+    }).append([title]);
+
+    return $('<div/>', {
+        addClass: 'video-list-item'
+    }).append([imageZone, textZone]).on('click', function (e) {
+        youtube.openVideo(i.resourceId.videoId);
+    });
+}
+
+function createVideoDOM (items) {
+    return $('<div/>', {
+        addClass: 'video-list'
+    }).append(items.map(createItemDOM));
+}
+
+function updateVideoList (response) {
+    var video = $('.tv-container');
+    video.empty().append(createVideoDOM(response.items))
+}
+
+module.exports = {
+    get: getVideoItems
+};
+},{}],26:[function(require,module,exports){
 /*global module, require*/
 module.exports = function (res) {
 	var feedObject = {item:[]}
@@ -2408,7 +2669,7 @@ module.exports = function (res) {
 
   return feedObject;
 };
-},{}],25:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -2459,7 +2720,7 @@ module.exports = (function () {
 		}
 }());
 
-},{"./app/analyticsConfig":2,"./app/history":10,"./init":26}],26:[function(require,module,exports){
+},{"./app/analyticsConfig":2,"./app/history":10,"./init":28}],28:[function(require,module,exports){
 /*global module, require, $*/
 module.exports = (function () {
 	var access = require('./app/access')
@@ -2540,7 +2801,7 @@ module.exports = (function () {
 		return 0;
 	}
 }());
-},{"./app/access":1,"./app/downloadMissingImage":9,"./app/ui/getLocalizedString":15,"./app/ui/header":16,"./app/ui/localizedStrings":18,"./app/ui/menu":19,"./app/ui/responsive":21,"./app/ui/storyList":23,"./io/createDir":27,"./io/doesFileExist":29,"./io/getFileContents":33,"./util/connection":42,"./util/date":43,"./util/err":44,"./util/notify":45}],27:[function(require,module,exports){
+},{"./app/access":1,"./app/downloadMissingImage":9,"./app/ui/getLocalizedString":16,"./app/ui/header":17,"./app/ui/localizedStrings":19,"./app/ui/menu":20,"./app/ui/responsive":22,"./app/ui/storyList":24,"./io/createDir":29,"./io/doesFileExist":31,"./io/getFileContents":35,"./util/connection":44,"./util/date":45,"./util/err":46,"./util/notify":47}],29:[function(require,module,exports){
 var getFileSystem = require('./getFileSystem')
 	, getFile = require('./getFile')
 	, makeDir = require('./makeDir')
@@ -2558,7 +2819,7 @@ module.exports = function () {
 		}, reject);
 	})
 };
-},{"../app/config":8,"../util/notify":45,"./getFile":32,"./getFileSystem":36,"./makeDir":37}],28:[function(require,module,exports){
+},{"../app/config":8,"../util/notify":47,"./getFile":34,"./getFileSystem":38,"./makeDir":39}],30:[function(require,module,exports){
 /*global module, require*/
 var getFileSystem = require('./getFileSystem')
 	, getFile = require('./getFile')
@@ -2593,7 +2854,7 @@ module.exports = function (filename, contents) {
 		}, reject);
 	})
 };
-},{"./getFile":32,"./getFileEntry":34,"./getFileSystem":36,"./writeFile":41}],29:[function(require,module,exports){
+},{"./getFile":34,"./getFileEntry":36,"./getFileSystem":38,"./writeFile":43}],31:[function(require,module,exports){
 var getFileSystem = require('./getFileSystem')
 	, getFile = require('./getFile');
 
@@ -2604,7 +2865,7 @@ module.exports = function (filename) {
 		}, reject)
 	})
 }
-},{"./getFile":32,"./getFileSystem":36}],30:[function(require,module,exports){
+},{"./getFile":34,"./getFileSystem":38}],32:[function(require,module,exports){
 var config = require('../app/config')
 	, getFileSystem = require('./getFileSystem')
 	, getFile = require('./getFile')
@@ -2621,7 +2882,7 @@ module.exports = function (url) {
 		}) 
 	})
 }
-},{"../app/config":8,"./downloadFile":31,"./getFile":32,"./getFileSystem":36}],31:[function(require,module,exports){
+},{"../app/config":8,"./downloadFile":33,"./getFile":34,"./getFileSystem":38}],33:[function(require,module,exports){
 var config = require('../app/config');
 
 module.exports = function (fileentry, url) {
@@ -2641,7 +2902,7 @@ module.exports = function (fileentry, url) {
     fileTransfer.download(uri, path, resolve, catchErrors, false, {})
   });
 };
-},{"../app/config":8}],32:[function(require,module,exports){
+},{"../app/config":8}],34:[function(require,module,exports){
 var config = require('../app/config');
 
 module.exports = function (filesystem, filename, create) {
@@ -2650,7 +2911,7 @@ module.exports = function (filesystem, filename, create) {
 		fs.getFile(filename, {create: !!create, exclusive: false}, resolve, reject);
 	});
 }
-},{"../app/config":8}],33:[function(require,module,exports){
+},{"../app/config":8}],35:[function(require,module,exports){
 var getFileSystem = require('./getFileSystem')
   , getFile = require('./getFile')
   , readFile = require('./readFile');
@@ -2664,13 +2925,13 @@ module.exports = function (filename) {
     }, reject);
   })
 }
-},{"./getFile":32,"./getFileSystem":36,"./readFile":39}],34:[function(require,module,exports){
+},{"./getFile":34,"./getFileSystem":38,"./readFile":41}],36:[function(require,module,exports){
 module.exports = function (fileentry) {
 	return new Promise(function (resolve, reject) {
 		fileentry.createWriter(resolve, reject);
 	})
 };
-},{}],35:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 var getFileSystem = require('./getFileSystem')
   , readDirectory = require('./readDirectory');
 
@@ -2681,13 +2942,13 @@ module.exports = function (filename) {
     }, reject);
   })
 }
-},{"./getFileSystem":36,"./readDirectory":38}],36:[function(require,module,exports){
+},{"./getFileSystem":38,"./readDirectory":40}],38:[function(require,module,exports){
 module.exports = function () {
 	return new Promise(function (resolve, reject) {
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, resolve, reject)
 	})
 };
-},{}],37:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var config = require('../app/config');
 
 module.exports = function (filesystem, dirname) {
@@ -2696,7 +2957,7 @@ module.exports = function (filesystem, dirname) {
 		fileentry.getDirectory(dirname, {create: true, exclusive: false}, resolve, reject);
 	});
 }
-},{"../app/config":8}],38:[function(require,module,exports){
+},{"../app/config":8}],40:[function(require,module,exports){
 var config = require('../app/config');
 
 module.exports = function (filesystem) {
@@ -2707,7 +2968,7 @@ module.exports = function (filesystem) {
 		reader.readEntries(resolve, reject);
 	});
 }
-},{"../app/config":8}],39:[function(require,module,exports){
+},{"../app/config":8}],41:[function(require,module,exports){
 /*global module, require*/
 var removeFile = require('./removeFile');
 
@@ -2750,13 +3011,13 @@ module.exports = function (fileentry) {
 	});
 };
 
-},{"./removeFile":40}],40:[function(require,module,exports){
+},{"./removeFile":42}],42:[function(require,module,exports){
 module.exports = function (fileentry) {
     return new Promise(function (resolve, reject) {
         fileentry.remove(resolve, reject)
     });
 };
-},{}],41:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 module.exports = function (filewriter, contents) {
   return new Promise(function (resolve, reject) {
     filewriter.onwriteend = resolve;
@@ -2766,7 +3027,7 @@ module.exports = function (filewriter, contents) {
 };
 
 
-},{}],42:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 /*global require, module, $*/
 var notify = require('./notify')
 	, config = require('../app/config');
@@ -2805,7 +3066,7 @@ module.exports = {
 	, offlineCallback: offlineCallback
 	, get: get
 };
-},{"../app/config":8,"./notify":45}],43:[function(require,module,exports){
+},{"../app/config":8,"./notify":47}],45:[function(require,module,exports){
 
 function getLocalDate (options) {
     var year = options.year;
@@ -2956,11 +3217,11 @@ function standardHour (time, ampm) {
     }
     return void 0;
 }
-},{}],44:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 module.exports = function (reason) {
 	console.log(reason);
 };
-},{}],45:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 var config = require('../app/config')
 	, toLocal = require('../app/ui/getLocalizedString')
 	, localStrings = require('../app/ui/localizedStrings');
@@ -2993,4 +3254,4 @@ module.exports = {
 	y: y,
 	n: n
 };
-},{"../app/config":8,"../app/ui/getLocalizedString":15,"../app/ui/localizedStrings":18}]},{},[25]);
+},{"../app/config":8,"../app/ui/getLocalizedString":16,"../app/ui/localizedStrings":19}]},{},[27]);

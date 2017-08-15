@@ -67,6 +67,10 @@
                         {
                             "xml": "<feature name=\"SocialSharing\"><param name=\"android-package\" value=\"nl.xservices.plugins.SocialSharing\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Calendar\"><param name=\"android-package\" value=\"nl.xservices.plugins.Calendar\" /></feature>",
+                            "count": 1
                         }
                     ],
                     "widget": [
@@ -122,6 +126,14 @@
                     "/manifest": [
                         {
                             "xml": "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.READ_CALENDAR\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.WRITE_CALENDAR\" />",
                             "count": 1
                         }
                     ]
@@ -195,6 +207,9 @@
             "PACKAGE_NAME": "com.ceip.events"
         },
         "com.bunkerpalace.cordova.YoutubeVideoPlayer": {
+            "PACKAGE_NAME": "com.ceip.events"
+        },
+        "cordova-plugin-calendar": {
             "PACKAGE_NAME": "com.ceip.events"
         }
     },
@@ -541,6 +556,14 @@
             "clobbers": [
                 "YoutubeVideoPlayer"
             ]
+        },
+        {
+            "id": "cordova-plugin-calendar.Calendar",
+            "file": "plugins/cordova-plugin-calendar/www/Calendar.js",
+            "pluginId": "cordova-plugin-calendar",
+            "clobbers": [
+                "Calendar"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -562,6 +585,7 @@
         "cordova-plugin-whitelist": "1.2.2",
         "cordova-plugin-x-socialsharing": "5.1.3",
         "es6-promise-plugin": "4.1.0",
-        "com.bunkerpalace.cordova.YoutubeVideoPlayer": "1.0.5"
+        "com.bunkerpalace.cordova.YoutubeVideoPlayer": "1.0.5",
+        "cordova-plugin-calendar": "4.6.0"
     }
 }

@@ -10,5 +10,7 @@
     "MessageUI.framework": 1,
     "MediaPlayer.framework": 1,
     "AVFoundation.framework": 1,
-    "JavaScriptCore.framework": 1
+    "JavaScriptCore.framework": 1,
+    "EventKit.framework": 1,
+    "EventKitUI.framework": 1
 }

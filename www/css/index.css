@@ -100,6 +100,17 @@ header a.spanner {
     width: calc(100% - 132px);
 }
 
+section.tv .tv-container {
+    position: absolute;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: calc(100% - 40px);
+    margin: 20px;
+    background-color: white;
+    text-align: center;
+    height: calc(100% - 40px);
+}
+
 /* header styles */
 
 header {
@@ -137,17 +148,18 @@ header.stay {
 }
 
 header .story-list,
-header .menu {
+header .menu,
+header .tv {
     height: 44px;
     background: url('../img/header-story.png');
-    background-color: #001c3d;
     background-size: auto 44px;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .tablet header .story-list,
-.tablet header .menu {
+.tablet header .menu ,
+.tablet header .tv {
     height: 66px;
     background-size: auto 66px;
 }
@@ -157,7 +169,6 @@ header .story {
     background: url('../img/header-story.png');
     background-size: auto 44px;
     background-repeat: no-repeat;
-    background-color: #001c3d;
     background-position: center;
 }
 
@@ -168,15 +179,16 @@ header .story {
 
 header .story-list,
 header .menu,
-header .story {
+header .story,
+header .tv  {
     display: none;
     -webkit-transition: opacity 200ms linear;
     transition: opacity 200ms linear;
 }
 
-header .story-list .show-menu,
-header .menu .show-menu,
-header .story-list .show-tv {
+header .show-menu,
+header .show-menu,
+header .show-tv {
     height: 44px;
     width: 44px;
     float: right;
@@ -186,13 +198,12 @@ header .story-list .show-tv {
     background-size: 100% 100%;
 }
 
-header .story-list .show-tv {
+header .show-tv {
     background-image: url('../img/tv.svg');
     float: left;
 }
 
-.arabic-ui header .story-list .show-menu,
-.arabic-ui header .menu .show-menu {
+.arabic-ui header .show-menu{
     float: left;
     -moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
@@ -202,7 +213,8 @@ header .story-list .show-tv {
 
 .tablet header .story-list .show-menu,
 .tablet header .story-list .show-tv,
-.tablet header .menu .show-menu {
+.tablet header .menu .show-menu,
+.tablet header .tv .show-menu{
     height: 66px;
     width: 66px;
     background-size: 77% 77%;
@@ -210,23 +222,26 @@ header .story-list .show-tv {
 
 header .story-list.active,
 header .menu.active,
-header .story.active {
+header .story.active,
+header .tv.active {
     display: block;
 }
 
 header .story-list.showing,
 header .menu.showing,
-header .story.showing {
+header .story.showing,
+header .tv.showing {
     opacity: 1.0;
 }
 
 header .story-list.hiding,
 header .menu.hiding,
-header .story.hiding {
+header .story.hiding,
+header .tv.hiding {
     opacity: 0.0;
 }
 
-header .story-list .show-tv.active {
+header .show-tv.active {
     background-image: url('../img/tv-blue.svg');
 }
 
@@ -325,6 +340,10 @@ header .story .back.active .label {
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
+}
+
+section.form {
+    display: none;
 }
 
 header .story .btn-group {
@@ -841,12 +860,6 @@ section.story-list .story-image img {
 
 /* end of story list styles */
 
-section.menu {
-    display: block;
-    z-index: 2;
-    background-color: #001c3d;
-}
-
 #player {
     -webkit-transform: translate3d(0, -100%, 0);
     transform: translate3d(0, -100%, 0);
@@ -859,14 +872,22 @@ section.menu {
     transform: translate3d(0, 0, 0);
 }
 
-section.menu {
+section.menu,
+section.tv {
+    display: block;
+    z-index: 2;
+    background-color: rgba(0,28,61, 0.91);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+section.menu, section.tv {
     -webkit-transform: translate3d(0, -100%, 0);
     transform: translate3d(0, -100%, 0);
     -webkit-transition-duration: 500ms;
     transition-duration: 500ms;
 }
 
-section.menu.active {
+section.menu.active, section.tv.active {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
@@ -1088,6 +1109,30 @@ section.story {
 section.story.active {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
+}
+
+section.story .has-ticket {
+    display: inline-block;
+    height: 44px;
+    line-height: 44px;
+    width: 50%;
+    font-size: 16px;
+    background-color: #d68019;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+}
+
+section.story .add-to-calendar {
+    display: inline-block;
+    height: 44px;
+    line-height: 44px;
+    width: 50%;
+    font-size: 16px;
+    background-color: #00caf2;
+    color: white;
+    text-decoration: none;
+    text-align: center;
 }
 
 section.story.full-height {
@@ -1830,5 +1875,35 @@ div#accordion strong.heading span {
 div#accordion strong.heading span.current span {
     background-position: -415px -565px;
 }
+
+/* video list start */
+
+.video-list {
+    display: block;
+}
+
+.video-list-item {
+
+}
+
+.video-list-item-image {
+     margin: 20px 20px 10px;
+}
+
+.video-list-item-image img {
+    display: block;
+    width: 100%;
+}
+
+.video-list-item-text {
+    margin: 10px 20px 20px;
+    font-weight: bold;
+    line-height: 1.1em;
+}
+
+/* video list end */
+
+
+
 
 

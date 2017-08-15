@@ -23,13 +23,17 @@
             "cordova-plugin-statusbar": {},
             "cordova-plugin-whitelist": {},
             "cordova-plugin-x-socialsharing": {},
-            "com.bunkerpalace.cordova.YoutubeVideoPlayer": {}
+            "com.bunkerpalace.cordova.YoutubeVideoPlayer": {},
+            "cordova-plugin-calendar": {
+                "CALENDAR_USAGE_DESCRIPTION": "This app uses your calendar"
+            }
         }
     },
     "dependencies": {
         "com.bunkerpalace.cordova.YoutubeVideoPlayer": "git+https://github.com/JonSmart/CordovaYoutubeVideoPlayer.git",
         "cordova-android": "~6.1.2",
         "cordova-ios": "^4.4.0",
+        "cordova-plugin-calendar": "^4.6.0",
         "cordova-plugin-device": "~1.1.2",
         "cordova-plugin-dialogs": "~1.2.1",
         "cordova-plugin-file": "~4.2.0",

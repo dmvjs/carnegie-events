@@ -1,6 +1,8 @@
 /*global module, require, $*/
 
 var config = require('../config')
+    , localSchedule = require('../localSchedule')
+    , localRegister = require('../localRegister')
 	, access = require('../access')
 	, notify = require('../../util/notify')
     , date = require("../../util/date")
@@ -54,7 +56,10 @@ if (browser) {
     var href = $(e.currentTarget).attr('href');
 
     if (href.substr(0, 1) === '#') {
-      if ($('.current').find(href)) {
+      if (href === "#"){
+          e.preventDefault();
+          return false;
+      } else if ($('.current').find(href)) {
         if (config.track && analytics) {
           analytics.trackEvent('Story', 'Link', 'Page Anchor Clicked', 10);
         }
@@ -204,6 +209,8 @@ function createPreviousAndNext() {
 function createPage(storyObj) {
     console.log(storyObj);
   return new Promise(function (resolve, reject) {
+      debugger;
+      window.storyObject = storyObj;
     var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
       , image = storyObj.image ? path + storyObj.image.split('/').pop() : config.missingImage
@@ -253,10 +260,70 @@ function createPage(storyObj) {
       $(this).prop('src', config.missingImage);
     });
 
+      if ((storyObj.regLink !== undefined) && (storyObj.regLink !== "") && (storyObj.regLink !== null)) {
+          var isRegistered = storyObj.eventID && localRegister.has('' + storyObj.eventID);
+          var registrationLink = $('<a/>', {
+              addClass: "has-ticket",
+              text: isRegistered ? "Registered" : "Register Now"
+          });
+
+          var isAddedToCalendar = storyObj.eventID && localSchedule.has('' + storyObj.eventID);
+
+          var calendarLink = $('<a/>', {
+              addClass: "add-to-calendar",
+              text: isAddedToCalendar ? 'View Event' : "Add to Calendar"
+          });
+
+          var registrationContainer = $('<div/>', {
+              addClass: 'registration-container'
+          });
+
+          registrationContainer.append(registrationLink, calendarLink);
+
+          if (!isRegistered) {
+              registrationLink.on('click', submitForm);
+          }
+          calendarLink.on('click', isAddedToCalendar ? openCalendarLink : openCalendarLink.apply(null, [true]));
+
+          page.append(registrationContainer);
+      }
+
     setTimeout(function () {
       resolve(page)
     }, 0)
   })
+}
+
+function openCalendarLink (isAddedToCalendar) {
+    if (isAddedToCalendar) {
+        window.plugins.calendar.openCalendar(new Date('Oct 10 2018 13:00:00 EST'));
+        return false;
+    }
+
+
+    window.plugins.calendar.createEventWithOptions(
+        "BIG MEETING",
+        "McDonalds",
+        "no",
+        new Date('Oct 10 2018 13:00:00 EST'),
+        new Date('Oct 10 2018 21:00:00 EST'),
+        {},
+        function (e){
+            //localSchedule.add("id");
+            //update add to calendar state to show registered, disable listener
+            //on story load, check registered status and update button onload
+
+            console.log(e);
+            window.plugins.calendar.openCalendar(new Date('Oct 10 2018 13:00:00 EST'),
+                function (e) {
+                    console.log(e);
+                }, function (e) {
+                    console.log(e);
+                });
+        },
+        function (e){console.log(e)}
+    );
+    //title, location, notes, startDate, endDate, options, successCallback, errorCallback
 }
 
 function notLast(id) {
@@ -329,6 +396,80 @@ function showAndUpdate(index) {
   });
 }
 
+function submitForm (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var json;
+    var form = document.getElementById('registration-form');
+    if (window.localStorage !== undefined && window.localStorage.LocalProfileSetting !== undefined) {
+        json = JSON.parse(localStorage.LocalProfileSetting);
+        var isRejected = false;
+        ['firstName', 'lastName', 'email', 'organization'].map(function (e) {
+            if (json !== undefined && json[e] !== undefined) {
+                if (json[e] === "") {
+                    if (!isRejected) {
+                        rejectFormSubmission("" + e + " was missing");
+                        isRejected = true;
+                    }
+                }
+            }
+        });
+
+        if (!isEmailValid(json['email'])) {
+            isRejected = true;
+            console.log('email rejected')
+        }
+        //TODO: not just whitespace in fields
+        //
+        if (isRejected === false) {
+            $("#firstnameEventReg").val(json.firstName);
+            $("#lastnameEventReg").val(json.lastName);
+            $("#institutionEventReg").val(json.organization);
+            $("#contactemailEventReg").val(json.email);
+            $("#isPressMember").prop('checked', json.press);
+            $.ajax({
+                url:'http://carnegieendowment.org/events/forms/index.cfm?fa=register',
+                type:'post',
+                data: $('#eventRegistration').serialize(),
+                success: function (e) {
+                    var response;
+                    try {
+                        response = e && JSON.parse(e);
+                    } catch (e) {
+                        console.log('post fail', e);
+                    }
+                    if (response !== undefined) {
+                        console.log('post success', response);
+                        var id = window.storyObject && window.storyObject.eventID;
+                        if (id) {
+                            localRegister.add('' + id);
+                        }
+                    }
+                },
+                error: function (e) {
+                    console.log('post error', e);
+                }
+            });
+        }
+    } else {
+        rejectFormSubmission("no local data available");
+    }
+}
+
+function isEmailValid (email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+function rejectFormSubmission (message) {
+    console.log(message);
+    notify.alert('Tap the gear icon from the story list view to provide your information.')
+}
+
 module.exports = {
-  show: show, next: next, previous: previous, hide: hideTextResize, updateSliderUI: updateSliderUI
+    show: show,
+    next: next,
+    previous: previous,
+    hide: hideTextResize,
+    updateSliderUI: updateSliderUI
 };

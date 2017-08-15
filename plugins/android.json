@@ -54,6 +54,9 @@
         },
         "com.bunkerpalace.cordova.YoutubeVideoPlayer": {
             "PACKAGE_NAME": "com.ceip.events"
+        },
+        "cordova-plugin-calendar": {
+            "PACKAGE_NAME": "com.ceip.events"
         }
     },
     "dependent_plugins": {

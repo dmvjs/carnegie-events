@@ -3,19 +3,19 @@ var story = require('./story')
 	, toLocal = require('./getLocalizedString')
 	, localStrings = require('./localizedStrings')
 	, loading = require('./loading')
-	, localProfile = require('../localProfile');
+	, localProfile = require('../localProfile')
+	, video = require('./video');
 
 var youtubeIsActive = false;
 var menuIsActive = false;
 
 $(document)
 	.on('touchend', 'header .show-menu', function (e) {
-		menuIsActive = !menuIsActive;
 		if (youtubeIsActive) {
 			youtubeIsActive = false;
-			removePlayer();
+			$('.show-tv').removeClass('active');
 		}
-		$('header').addClass('stay');
+		menuIsActive = !menuIsActive;
 		if (menuIsActive) {
 			localProfile.setup();
 			showMenu();
@@ -24,19 +24,23 @@ $(document)
 			showStoryList();
 		}
 	})
-	.on('touchstart', '.show-tv', function (e) {
-		$(e.currentTarget).addClass('active');
+	.on('touchstart', '.show-tv', function () {
+		$('.show-tv').addClass('active');
 	})
-	.on('touchend', '.show-tv', function (e) {
+	.on('touchend', '.show-tv', function () {
+		if (menuIsActive) {
+			menuIsActive = false;
+			$('.show-menu').removeClass('active');
+		}
 		youtubeIsActive = !youtubeIsActive;
-		setTimeout(function () {
-			if (youtubeIsActive) {
-				createPlayer()
-			} else {
-				$(e.currentTarget).remove('active');
-				removePlayer()
-			}
-		});
+		if (youtubeIsActive) {
+			showTV();
+		} else {
+			showStoryList();
+			setTimeout(function () {
+				$('.show-tv').removeClass('active');
+			}, 100);
+		}
 	})
 	.on('touchstart', 'header .story .back', function (e) {
 		$(e.currentTarget).addClass('active');
@@ -53,7 +57,6 @@ $('header a.spanner').on('touchstart', function (e) {
 	e.preventDefault();
 	if (youtubeIsActive === true) {
 		youtubeIsActive = false;
-		removePlayer()
 	}
 });
 
@@ -99,7 +102,7 @@ function addListener(className) {
 }
 
 function show(sel) {
-	var sels = ['.menu', '.story', '.story-list', '.show-tv']
+	var sels = ['.menu', '.story', '.story-list', '.tv']
 		, $h = $('header')
 		, $sel = $h.find(sel).stop(true);
 
@@ -115,30 +118,32 @@ function show(sel) {
 }
 
 function showStoryList() {
-	$('section.story').removeClass('active');
+	$('section').removeClass('active');
 	$('section.story-list').addClass('active');
-	$('section.menu').removeClass('active');
 	$('footer.story-footer').removeClass('active');
 	show('.story-list');
 	story.hide();
 }
 
-function showTV() {
-	$('section.show-tv').addClass('active');
-	show('.show-tv');
-}
-
 function showMenu() {
+	$('section.tv').removeClass('active');
 	$('section.menu').addClass('active');
 	show('.menu');
 }
 
 function showStory() {
 	$('header').removeClass('stay');
-	$('section.menu').removeClass('active');
+	$('section').removeClass('active');
 	$('footer.story-footer').addClass('active');
 	$('section.story').addClass('active');
 	show('.story');
+}
+
+function showTV() {
+	video.get();
+	$('section.menu').removeClass('active');
+	$('section.tv').addClass('active');
+	show('.tv');
 }
 
 function updateLanguageUI () {

@@ -25,7 +25,7 @@
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleVersion</key>
-    <string>5</string>
+    <string>6</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSAppTransportSecurity</key>
@@ -52,5 +52,15 @@
       <string>UIInterfaceOrientationPortraitUpsideDown</string>
       <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
+    <key>CFBundleLocalizations</key>
+    <array>
+      <string>en</string>
+      <string>de</string>
+      <string>nl</string>
+      <string>fr</string>
+      <string>it</string>
+    </array>
+    <key>NSCalendarsUsageDescription</key>
+    <string>This app uses your calendar</string>
   </dict>
 </plist>
