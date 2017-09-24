@@ -9,7 +9,6 @@ var config = require('../config')
 	, share = ['ios', 'android', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
 	, browser = ['ios', 'android', 'blackberry 10', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
 	, $story = $('section.story')
-	, slider = document.getElementById('text-resize-input')
 	, feedObj
 	, index;
 
@@ -103,7 +102,6 @@ $(document)
 				analytics.trackEvent('Story', 'UI', 'Text Resize Opened', 10);
 			}
 			ui.removeClass('active');
-            //updateSliderUI();
 		}, 10)
 	});
 
@@ -111,27 +109,6 @@ function hideTextResize() {
   $('.text-resize').removeClass('active');
     $('footer.story-footer').removeClass('active');
 }
-
-/*function updateSliderUI() {
-    setTimeout(function () {
-        var val = parseFloat(slider.value)
-            , value = (slider.value - slider.min) / (slider.max - slider.min);
-
-        config.storyFontSize = val;
-
-        if (window.__languageForCarnegie === "ar") {
-            slider.style.backgroundImage =
-                '-webkit-gradient(linear, right top, left top, color-stop(' + value + ', #007aff), color-stop(' + value + ', #b8b7b8))';
-        } else {
-            slider.style.backgroundImage =
-                '-webkit-gradient(linear, left top, right top, color-stop(' + value + ', #007aff), color-stop(' + value + ', #b8b7b8))';
-        }
-        $story.css('font-size', val + 'em');
-        slider.style.direction = window.__languageForCarnegie === "ar" ? "rtl" : "ltr";
-    }, 0)
-}
-
-slider.onchange = updateSliderUI;*/
 
 function show(i, feed) {
   return new Promise(function (resolve, reject) {
@@ -556,6 +533,5 @@ module.exports = {
     show: show,
     next: next,
     previous: previous,
-    hide: hideTextResize/*,
-    updateSliderUI: updateSliderUI*/
+    hide: hideTextResize
 };
