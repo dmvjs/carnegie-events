@@ -32,17 +32,52 @@
                 <a class="show-menu"></a>
             </div>
             <div class="menu">
-                <a class="show-menu"></a>
+                <a class="show-tv"></a>
+                <a class="spanner"></a>
+                <a class="show-menu active"></a>
                 <div class="offline"></div>
+            </div>
+            <div class="tv">
+                <a class="show-tv active"></a>
+                <a class="spanner"></a>
+                <a class="show-menu"></a>
             </div>
         </header>
         <div class="container">
+            <section class="tv">
+                <div class="tv-container"></div>
+            </section>
             <section id="story-list-container" class="story-list active"></section>
             <section class="story">
                 <div class="story-behind"></div>
                 <div class="next"></div>
                 <div class="current"></div>
                 <div class="previous"></div>
+            </section>
+            <section class="form">
+                <form name="eventRegistration" id="eventRegistration" action="http://carnegieendowment.org/events/forms/index.cfm?fa=register" method="post">
+                    <fieldset>
+                        <strong class="required">Fields marked with an asterisk (*) are required.</strong>
+                        <legend>Registration information</legend>
+                        <label for="FirstNameEventReg" class="txtFld"><span class="required">First Name*:</span><input name="FirstName" id="firstnameEventReg" value="" class="txtFld" required="yes" message="Please enter your first name" type="text">
+                        </label>
+                        <label for="LastNameEventReg" class="txtFld"><span class="required">Last Name*:</span><input name="LastName" id="lastnameEventReg" value="" class="txtFld" required="yes" message="Please enter your last name" type="text">
+                        </label>
+                        <label for="InstitutionEventReg" class="txtFld"><span class="required">Organization*:</span><input name="Institution" id="institutionEventReg" value="" class="txtFld" required="yes" type="text">
+                        </label>
+                        <label for="ContactEmailEventReg" class="txtFld"><span class="required">Contact Email*:</span><input name="ContactEmail" id="contactemailEventReg" value="" class="txtFld" required="yes" message="Please Enter Your Email Address!" type="text"></label>
+                        <label for="isPressMember" class="checkbox"><input class="checkbox" name="isPressMember" id="isPressMember" value="1" type="checkbox"><span>I am a member of the press</span></label>
+                        <label id="info-list" for="info"><span>Info (Nevermind this field if you have CSS turned off)</span><input name="info" id="info" maxlength="50" type="text"></label>
+                        <input name="originator" value="Carnegie Endowment" type="hidden">
+                        <input name="fromApp" value="true" type="hidden">
+                        <input name="event" value="5653" type="hidden">
+                        <input name="submit_form" value="submit" type="hidden">
+                        <input name="returnUrl" id="returnUrl" value="http://carnegieendowment.org/events/5653" type="Hidden">
+                        <div class="actionBtns">
+                            <button value="Register" class="btnSubmit" type="submit">Register</button>
+                        </div>
+                    </fieldset>
+                </form>
             </section>
             <section class="menu">
                 <h3>My profile</h3>
@@ -60,7 +95,9 @@
                             <input type="email" name="contactEmail" id="profile-contact-email" required>
                             <input type="checkbox" name="iAmPress" id="profile-press-checkbox">
                             <label for="profile-press-checkbox">I am a member of the press.</label>
-                            <input id="profile-submit-button" type="submit" value="Save profile">
+                            <div id="profile-submit-button-container">
+                                <input id="profile-submit-button" type="submit" value="Save profile">
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -83,7 +120,7 @@
         <script type="text/javascript" src="js/lib/modernizr.js"></script>
         <script type="text/javascript" src="js/lib/promises-polyfill-min.js"></script>
         <script type="text/javascript" src="js/lib/hammer-min.js"></script>
-        <script type="text/javascript" src="js/app/youtube.js"></script>
+        <script type="text/javascript" src="js/lib/Calendar.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
     </body>
 </html>

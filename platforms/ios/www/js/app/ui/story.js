@@ -13,49 +13,20 @@ var config = require('../config')
 	, feedObj
 	, index;
 
-if (share && plugins && plugins.socialsharing) {
-  $(document)
-		.on('touchstart', 'footer.story-footer .share', function (e) {
-			$(e.currentTarget).addClass('active');
-		})
-		.on('touchend', 'footer.story-footer .share', function (e) {
-			var ui = $(e.currentTarget);
-			if ($(e.currentTarget).hasClass('disabled') === false) {
-				setTimeout(function () {
-					hideTextResize();
-					if (typeof index !== 'undefined' && feedObj && navigator.connection.type !== 'none') {
-						window.plugins.socialsharing.share(
-								'I\'m currently reading ' + (feedObj.story ? feedObj.story[index].title : feedObj.item[index].title),
-							(feedObj.story ? feedObj.story[index].title : feedObj.item[index].title),
-								(feedObj.story ? (feedObj.story[index].image) : (feedObj.item[index].image)) || config.missingImage,
-							encodeURI(feedObj.story ? feedObj.story[index].link : feedObj.item[index].link)
-						);
-						if (config.track && analytics) {
-							analytics.trackEvent('Story', 'Share', 'Share Clicked', 10);
-						}
-					} else {
-						if (navigator.connection.type === 'none') {
-							notify.alert(config.connectionMessage);
-						} else {
-							notify.alert('Sorry, a problem occurred while trying to share this post')
-						}
-					}
-					ui.removeClass('active');
-				}, 0)
-			} else {
-				ui.removeClass('active');
-			}
-		})
-} else {
-  //remove footer & make story window taller, sharing not supported
-  $('footer.story-footer button.share').addClass('disabled');
-}
+$(document)
+    .on('touchstart', 'footer.story-footer .share', function (e) {
+        // show stuff in story footer when tapped
+        // $(e.currentTarget).addClass('active');
+    })
+    .on('touchend', 'footer.story-footer .share', function (e) {
+        // do stuff in story-footer when clicked
+    });
 
 if (browser) {
   $(document).on('click', 'section.story .current a', function (e) {
-    var href = $(e.currentTarget).attr('href');
+      var href = $(e.currentTarget).attr('href');
 
-    if (href.substr(0, 1) === '#') {
+    if (href && href.substr(0, 1) === '#') {
       if (href === "#"){
           e.preventDefault();
           return false;
@@ -71,7 +42,7 @@ if (browser) {
       }
     } else if (navigator.connection.type !== 'none') {
       e.preventDefault();
-      if (href.substr(0, 6) === 'mailto') {
+      if (href && href.substr(0, 6) === 'mailto') {
         window.open(encodeURI(href), '_system', '');
         if (config.track && analytics) {
           analytics.trackEvent('Story', 'Link', 'Email Link Clicked', 10);
@@ -93,44 +64,20 @@ if (browser) {
 
 $(document)
 	.on('touchstart', 'footer.story-footer .text', function (e) {
-		$(e.currentTarget).addClass('active');
+		//$(e.currentTarget).addClass('active');
 	})
 	.on('touchend', 'footer.story-footer .text', function (e) {
-		var ui = $(e.currentTarget);
+		/*var ui = $(e.currentTarget);
 		setTimeout(function () {
 			$('.text-resize').toggleClass('active');
 			if (config.track && analytics) {
 				analytics.trackEvent('Story', 'UI', 'Text Resize Opened', 10);
 			}
 			ui.removeClass('active');
-            updateSliderUI();
-		}, 10)
+            //updateSliderUI();
+		}, 10)*/
 	});
 
-function hideTextResize() {
-  $('.text-resize').removeClass('active');
-}
-
-function updateSliderUI() {
-    setTimeout(function () {
-        var val = parseFloat(slider.value)
-            , value = (slider.value - slider.min) / (slider.max - slider.min);
-
-        config.storyFontSize = val;
-
-        if (window.__languageForCarnegie === "ar") {
-            slider.style.backgroundImage =
-                '-webkit-gradient(linear, right top, left top, color-stop(' + value + ', #007aff), color-stop(' + value + ', #b8b7b8))';
-        } else {
-            slider.style.backgroundImage =
-                '-webkit-gradient(linear, left top, right top, color-stop(' + value + ', #007aff), color-stop(' + value + ', #b8b7b8))';
-        }
-        $story.css('font-size', val + 'em');
-        slider.style.direction = window.__languageForCarnegie === "ar" ? "rtl" : "ltr";
-    }, 0)
-}
-
-slider.onchange = updateSliderUI;
 
 function show(i, feed) {
   return new Promise(function (resolve, reject) {
@@ -207,18 +154,17 @@ function createPreviousAndNext() {
 }
 
 function createPage(storyObj) {
-    console.log(storyObj);
+    //console.log(storyObj);
   return new Promise(function (resolve, reject) {
-      debugger;
-      window.storyObject = storyObj;
     var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
       , image = storyObj.image ? path + storyObj.image.split('/').pop() : config.missingImage
       , specialImage = storyObj["specialNameImage"] && path + storyObj["specialNameImage"].split('/').pop()
       , feedConfig = access.getFeedsFromConfig()[access.getCurrentId()]
-      /*, topBar = specialImage ? null : $('<div/>', {
-        addClass: 'top-bar', html: storyObj.docType || ''
-      })*/
+      , topBar = $('<div/>', {
+        addClass: 'top-bar',
+            text: storyObj.location + ' – ' + storyObj.pubDate
+      })
       , storyTitle = $('<div/>', {
         addClass: 'story-title', text: storyObj.title || ''
       })
@@ -243,18 +189,30 @@ function createPage(storyObj) {
       , storyTop = $('<div/>', {
         addClass: 'story-top'
       }).append(storyImage).append(storySpecialImageContainer).append(storyMeta)
+       , storySummary = $('<div/>', {
+        addClass: 'story-summary',
+        text: storyObj.summary
+      })
+        , storySpeakers = $('<div/>', {
+        addClass: 'story-speakers',
+        html: !!storyObj.speakerList ? ('<div class="story-speaker-list-featuring">Featuring</div>' + storyObj.speakerList) : null
+    })
+      , storySummaryContainer = $('<div/>', {
+        addClass: 'story-summary-container'
+      }).append([storySummary, storySpeakers])
       , storyText = $('<div/>', {
         addClass: 'story-text', html: storyObj.description
       })
       , page = $('<div/>', {
-        addClass: 'page'
+        addClass: 'page',
+        "data-object": JSON.stringify(storyObj)
       });
 
       /*if (!specialImage) {
           page.append(topBar)
       }*/
 
-      page.append(storyTop).append(storyText);
+      page.append([topBar, storyTop, storySummaryContainer, storyText]);
 
     storyImage.on('error', function (e) {
       $(this).prop('src', config.missingImage);
@@ -267,23 +225,42 @@ function createPage(storyObj) {
               text: isRegistered ? "Registered" : "Register Now"
           });
 
+          var cancelLink = $('<a/>', {
+              addClass: "cancel-registration",
+              text: "Cancel Registration",
+              href: '#'
+          });
+
           var isAddedToCalendar = storyObj.eventID && localSchedule.has('' + storyObj.eventID);
 
           var calendarLink = $('<a/>', {
               addClass: "add-to-calendar",
-              text: isAddedToCalendar ? 'View Event' : "Add to Calendar"
+              text: isAddedToCalendar ? 'Open in Calendar' : "Add to Calendar",
+              href: '#'
           });
 
           var registrationContainer = $('<div/>', {
               addClass: 'registration-container'
           });
 
-          registrationContainer.append(registrationLink, calendarLink);
+          registrationContainer.append(registrationLink, calendarLink, cancelLink);
 
           if (!isRegistered) {
               registrationLink.on('click', submitForm);
+              cancelLink.hide();
           }
-          calendarLink.on('click', isAddedToCalendar ? openCalendarLink : openCalendarLink.apply(null, [true]));
+          calendarLink.on('click', isAddedToCalendar ? justOpenCalendar : openCalendarLink);
+          cancelLink.on('click', function () {
+              $.ajax({
+                  url: storyObj.cancelRegLink,
+                  success: function (e) {
+                      cancelRegistration();
+                  },
+                  error: function (e) {
+                      notify.alert('An error occurred while registering from this event.')
+                  }
+              });
+          });
 
           page.append(registrationContainer);
       }
@@ -294,35 +271,79 @@ function createPage(storyObj) {
   })
 }
 
-function openCalendarLink (isAddedToCalendar) {
-    if (isAddedToCalendar) {
-        window.plugins.calendar.openCalendar(new Date('Oct 10 2018 13:00:00 EST'));
-        return false;
+function switchCalendarLink () {
+    $('.add-to-calendar').text('Open in Calendar').off('click', openCalendarLink).on('click', justOpenCalendar);
+}
+
+function switchRegisterLink () {
+    $('.has-ticket').text('Registered').off('click', submitForm);
+    $('.cancel-registration').show();
+}
+
+function cancelRegistration () {
+    $('.has-ticket').text('Register Now').on('click', submitForm);
+    $('.cancel-registration').hide();
+}
+
+function getCurrentPageData () {
+    var currentPage = $('.current .page');
+    var data = currentPage && currentPage.data !== undefined && typeof currentPage.data === 'function' && currentPage.data();
+
+    if (!!data) {
+        return data.object;
     }
+    return void 0;
+}
 
+function getCalendarData () {
+    var data = getCurrentPageData();
+    if (data !== undefined) {
+        return data.calendarLink;
+    }
+    return void 0;
+}
 
-    window.plugins.calendar.createEventWithOptions(
-        "BIG MEETING",
-        "McDonalds",
-        "no",
-        new Date('Oct 10 2018 13:00:00 EST'),
-        new Date('Oct 10 2018 21:00:00 EST'),
-        {},
-        function (e){
-            //localSchedule.add("id");
-            //update add to calendar state to show registered, disable listener
-            //on story load, check registered status and update button onload
+function justOpenCalendar () {
+    var calendarData = getCalendarData();
+    if (calendarData !== undefined) {
+        var startDate = calendarData.startDate !== undefined && new Date(calendarData.startDate);
+        var endDate = calendarData.endDate !== undefined && new Date(calendarData.endDate);
+        if (startDate !== undefined && endDate !== undefined) {
+            window.plugins.calendar.openCalendar(startDate);
+        }
+    }
+    return false;
+}
 
-            console.log(e);
-            window.plugins.calendar.openCalendar(new Date('Oct 10 2018 13:00:00 EST'),
-                function (e) {
+function openCalendarLink () {
+    var data = getCurrentPageData();
+    var calendarData = getCalendarData();
+    if (calendarData !== undefined) {
+        var startDate = calendarData.startDate !== undefined && new Date(calendarData.startDate);
+        var endDate = calendarData.endDate !== undefined && new Date(calendarData.endDate);
+        if (startDate !== undefined && endDate !== undefined) {
+            window.plugins.calendar.createEventWithOptions(
+                data.title,
+                data.location || '',
+                "no",
+                startDate,
+                endDate,
+                {},
+                function (e){
+                    localSchedule.add(data.eventID);
+                    //update add to calendar state to show registered, disable listener
+                    //on story load, check registered status and update button onload
+
                     console.log(e);
-                }, function (e) {
-                    console.log(e);
-                });
-        },
-        function (e){console.log(e)}
-    );
+                    switchCalendarLink();
+                    justOpenCalendar();
+                },
+                function (e){
+                    console.log(e)
+                }
+            );
+        }
+    }
     //title, location, notes, startDate, endDate, options, successCallback, errorCallback
 }
 
@@ -372,7 +393,6 @@ function previous() {
 }
 
 function update() {
-  hideTextResize();
   $('section.story-list ul li .story-item.active').removeClass('active');
   $('section.story-list ul li .story-item').eq(index).addClass('active');
 
@@ -396,14 +416,10 @@ function showAndUpdate(index) {
   });
 }
 
-function submitForm (event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    var json;
-    var form = document.getElementById('registration-form');
+function prevalidateForm () {
+    var isRejected = false;
     if (window.localStorage !== undefined && window.localStorage.LocalProfileSetting !== undefined) {
-        json = JSON.parse(localStorage.LocalProfileSetting);
-        var isRejected = false;
+        var json = JSON.parse(localStorage.LocalProfileSetting);
         ['firstName', 'lastName', 'email', 'organization'].map(function (e) {
             if (json !== undefined && json[e] !== undefined) {
                 if (json[e] === "") {
@@ -414,6 +430,17 @@ function submitForm (event) {
                 }
             }
         });
+    }
+    return isRejected;
+}
+
+function submitForm (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var form = document.getElementById('registration-form');
+    if (window.localStorage !== undefined && window.localStorage.LocalProfileSetting !== undefined) {
+        var isRejected = prevalidateForm();
+        var json = JSON.parse(localStorage.LocalProfileSetting);
 
         if (!isEmailValid(json['email'])) {
             isRejected = true;
@@ -440,10 +467,14 @@ function submitForm (event) {
                     }
                     if (response !== undefined) {
                         console.log('post success', response);
-                        var id = window.storyObject && window.storyObject.eventID;
+                        var id = $(event.currentTarget).closest('.page').data().object.eventID;
+                        console.log('ID: ' + id);
+
                         if (id) {
                             localRegister.add('' + id);
+                            switchRegisterLink();
                         }
+
                     }
                 },
                 error: function (e) {
@@ -463,13 +494,11 @@ function isEmailValid (email) {
 
 function rejectFormSubmission (message) {
     console.log(message);
-    notify.alert('Tap the gear icon from the story list view to provide your information.')
+    notify.alert('Tap the gear icon to provide your information.')
 }
 
 module.exports = {
     show: show,
     next: next,
-    previous: previous,
-    hide: hideTextResize,
-    updateSliderUI: updateSliderUI
+    previous: previous
 };

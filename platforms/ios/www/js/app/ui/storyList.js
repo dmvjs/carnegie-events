@@ -38,8 +38,7 @@ function show(feedObj, forceActive) {
             id: 'pullrefresh'
         }).append(message)
             , topBar = $('<div/>', {
-            addClass: 'top-bar'
-            ,
+            addClass: 'top-bar',
             text: toLocal(localStrings.updatedColon, feedConfig.language) + date.getFriendlyDate(feedObj, feedConfig.language)
         })
             , ul = $('<ul/>', {})
@@ -153,11 +152,12 @@ function show(feedObj, forceActive) {
                 var li = $(this).closest('li')
                     , index = $('section.story-list ul li').index(li)
                     , feed = sent ? void 0 : feedObj;
-
-                $('.story-item.active').removeClass('active');
                 $(this).addClass('active');
                 story.show(index, feed).then(header.showStory);
                 sent = true;
+                setTimeout(function () {
+                    $('.story-item.active').removeClass('active');
+                }, 350)
             }
         });
 

@@ -32,7 +32,7 @@
     "dependencies": {
         "com.bunkerpalace.cordova.YoutubeVideoPlayer": "git+https://github.com/JonSmart/CordovaYoutubeVideoPlayer.git",
         "cordova-android": "~6.1.2",
-        "cordova-ios": "^4.4.0",
+        "cordova-ios": "^4.5.0",
         "cordova-plugin-calendar": "^4.6.0",
         "cordova-plugin-device": "~1.1.2",
         "cordova-plugin-dialogs": "~1.2.1",

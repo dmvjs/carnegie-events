@@ -91,8 +91,8 @@ function show(feedObj, forceActive) {
             .append(checkButton)
             .append(!!element.regLink ? ticketButton : null)
             .append(!!element.livestream && element.liveStream !== "False" ? videoButton : null)
-            .append(!!element.hashtag ? twitterButton : null)
-            .append(!!element.poll ? contactButton : null)
+            .append(!!element["hashtag "] ? twitterButton : null)
+            .append(!!element["poll "] ? contactButton : null)
             .append(!!element.resourceList ? fileButton : null)
                 , storyItem = $('<div/>', {
                 addClass: 'story-item'

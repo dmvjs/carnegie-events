@@ -3,47 +3,44 @@ var story = require('./story')
 	, toLocal = require('./getLocalizedString')
 	, localStrings = require('./localizedStrings')
 	, loading = require('./loading')
-	, localProfile = require('../localProfile');
+	, localProfile = require('../localProfile')
+	, video = require('./video');
 
-var isActive = false;
+var youtubeIsActive = false;
+var menuIsActive = false;
 
 $(document)
-	.on('touchstart', '.show-menu', function (e) {
-		$(e.currentTarget).addClass('active');
-	})
-	.on('touchend', '.show-menu', function (e) {
-		if (isActive) {
-			$(e.currentTarget).removeClass('active');
-			isActive = false;
-			removePlayer();
-			return;
+	.on('touchend', 'header .show-menu', function (e) {
+		if (youtubeIsActive) {
+			youtubeIsActive = false;
+			$('.show-tv').removeClass('active');
 		}
-		var ui = $(e.currentTarget);
-		setTimeout(function () {
-			$('header').addClass('stay');
-			if ($('section.menu').hasClass('active')) {
-				localProfile.set();
-				showStoryList();
-			} else {
-				localProfile.setup();
-				showMenu();
-			}
-			ui.removeClass('active');
-		}, 100);
+		menuIsActive = !menuIsActive;
+		if (menuIsActive) {
+			localProfile.setup();
+			showMenu();
+		} else {
+			localProfile.set();
+			showStoryList();
+		}
 	})
-	.on('touchstart', '.show-tv', function (e) {
-		$(e.currentTarget).addClass('active');
+	.on('touchstart', '.show-tv', function () {
+		$('.show-tv').addClass('active');
 	})
-	.on('touchend', '.show-tv', function (e) {
-		isActive = !isActive;
-		setTimeout(function () {
-			if (isActive) {
-				createPlayer()
-			} else {
-				removePlayer()
-			}
-			$(e.currentTarget).toggleClass('active', isActive)
-		}, 100);
+	.on('touchend', '.show-tv', function () {
+		if (menuIsActive) {
+			menuIsActive = false;
+			$('.show-menu').removeClass('active');
+		}
+		youtubeIsActive = !youtubeIsActive;
+		if (youtubeIsActive) {
+			showTV();
+		} else {
+			showStoryList();
+			setTimeout(function () {
+				$('.show-tv').removeClass('active');
+			}, 100);
+		}
 	})
 	.on('touchstart', 'header .story .back', function (e) {
 		$(e.currentTarget).addClass('active');
@@ -53,14 +50,13 @@ $(document)
 		setTimeout(function () {
 			showStoryList();
 			ui.removeClass('active');
-		}, 100);
+		});
 	});
 
 $('header a.spanner').on('touchstart', function (e) {
-	e.preventDefault()
-	if (isActive === true) {
-		isActive = false;
-		removePlayer()
+	e.preventDefault();
+	if (youtubeIsActive === true) {
+		youtubeIsActive = false;
 	}
 });
 
@@ -106,7 +102,7 @@ function addListener(className) {
 }
 
 function show(sel) {
-	var sels = ['.menu', '.story', '.story-list']
+	var sels = ['.menu', '.story', '.story-list', '.tv']
 		, $h = $('header')
 		, $sel = $h.find(sel).stop(true);
 
@@ -122,25 +118,32 @@ function show(sel) {
 }
 
 function showStoryList() {
-	$('section.story').removeClass('active');
+	$('section').removeClass('active');
 	$('section.story-list').addClass('active');
-	$('section.menu').removeClass('active');
 	$('footer.story-footer').removeClass('active');
 	show('.story-list');
 	story.hide();
 }
 
 function showMenu() {
+	$('section.tv').removeClass('active');
 	$('section.menu').addClass('active');
 	show('.menu');
 }
 
 function showStory() {
 	$('header').removeClass('stay');
-	$('section.menu').removeClass('active');
+	$('section').removeClass('active');
 	$('footer.story-footer').addClass('active');
 	$('section.story').addClass('active');
 	show('.story');
+}
+
+function showTV() {
+	video.get();
+	$('section.menu').removeClass('active');
+	$('section.tv').addClass('active');
+	show('.tv');
 }
 
 function updateLanguageUI () {

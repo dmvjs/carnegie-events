@@ -9,6 +9,7 @@ function getVideoItems () {
         },
         error: function (e) {
             debugger;
+            //TODO: show alert?
         }
     });
 }
@@ -38,8 +39,13 @@ function createItemDOM (element) {
     return $('<div/>', {
         addClass: 'video-list-item'
     }).append([imageZone, textZone]).on('click', function (e) {
+        e.preventDefault();
         youtube.openVideo(i.resourceId.videoId);
     });
+}
+
+function removeAllClickListeners () {
+    $('.video-list-item').off('click');
 }
 
 function createVideoDOM (items) {
@@ -54,5 +60,6 @@ function updateVideoList (response) {
 }
 
 module.exports = {
-    get: getVideoItems
+    get: getVideoItems,
+    removeListeners: removeAllClickListeners
 };

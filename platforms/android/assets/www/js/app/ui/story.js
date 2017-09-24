@@ -1,6 +1,8 @@
 /*global module, require, $*/
 
 var config = require('../config')
+    , localSchedule = require('../localSchedule')
+    , localRegister = require('../localRegister')
 	, access = require('../access')
 	, notify = require('../../util/notify')
     , date = require("../../util/date")
@@ -51,10 +53,13 @@ if (share && plugins && plugins.socialsharing) {
 
 if (browser) {
   $(document).on('click', 'section.story .current a', function (e) {
-    var href = $(e.currentTarget).attr('href');
+      var href = $(e.currentTarget).attr('href');
 
-    if (href.substr(0, 1) === '#') {
-      if ($('.current').find(href)) {
+    if (href && href.substr(0, 1) === '#') {
+      if (href === "#"){
+          e.preventDefault();
+          return false;
+      } else if ($('.current').find(href)) {
         if (config.track && analytics) {
           analytics.trackEvent('Story', 'Link', 'Page Anchor Clicked', 10);
         }
@@ -66,7 +71,7 @@ if (browser) {
       }
     } else if (navigator.connection.type !== 'none') {
       e.preventDefault();
-      if (href.substr(0, 6) === 'mailto') {
+      if (href && href.substr(0, 6) === 'mailto') {
         window.open(encodeURI(href), '_system', '');
         if (config.track && analytics) {
           analytics.trackEvent('Story', 'Link', 'Email Link Clicked', 10);
@@ -202,7 +207,7 @@ function createPreviousAndNext() {
 }
 
 function createPage(storyObj) {
-    console.log(storyObj);
+    //console.log(storyObj);
   return new Promise(function (resolve, reject) {
     var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
@@ -240,7 +245,8 @@ function createPage(storyObj) {
         addClass: 'story-text', html: storyObj.description
       })
       , page = $('<div/>', {
-        addClass: 'page'
+        addClass: 'page',
+        "data-object": JSON.stringify(storyObj)
       });
 
       /*if (!specialImage) {
@@ -253,10 +259,109 @@ function createPage(storyObj) {
       $(this).prop('src', config.missingImage);
     });
 
+      if ((storyObj.regLink !== undefined) && (storyObj.regLink !== "") && (storyObj.regLink !== null)) {
+          var isRegistered = storyObj.eventID && localRegister.has('' + storyObj.eventID);
+          var registrationLink = $('<a/>', {
+              addClass: "has-ticket",
+              text: isRegistered ? "Registered" : "Register Now"
+          });
+
+          var isAddedToCalendar = storyObj.eventID && localSchedule.has('' + storyObj.eventID);
+
+          var calendarLink = $('<a/>', {
+              addClass: "add-to-calendar",
+              text: isAddedToCalendar ? 'Open in Calendar' : "Add to Calendar",
+              href: '#'
+          });
+
+          var registrationContainer = $('<div/>', {
+              addClass: 'registration-container'
+          });
+
+          registrationContainer.append(registrationLink, calendarLink);
+
+          if (!isRegistered) {
+              registrationLink.on('click', submitForm);
+          }
+          calendarLink.on('click', isAddedToCalendar ? justOpenCalendar : openCalendarLink);
+
+          page.append(registrationContainer);
+      }
+
     setTimeout(function () {
       resolve(page)
     }, 0)
   })
+}
+
+function switchCalendarLink () {
+    $('.add-to-calendar').text('Open in Calendar').off('click', openCalendarLink).on('click', justOpenCalendar);
+}
+
+function switchRegisterLink () {
+    $('.has-ticket').text('Registered').off('click', submitForm)
+}
+
+function getCurrentPageData () {
+    var currentPage = $('.current .page');
+    var data = currentPage && currentPage.data !== undefined && typeof currentPage.data === 'function' && currentPage.data();
+
+    if (!!data) {
+        return data.object;
+    }
+    return void 0;
+}
+
+function getCalendarData () {
+    var data = getCurrentPageData();
+    if (data !== undefined) {
+        return data.calendarLink;
+    }
+    return void 0;
+}
+
+function justOpenCalendar () {
+    var calendarData = getCalendarData();
+    if (calendarData !== undefined) {
+        var startDate = calendarData.startDate !== undefined && new Date(calendarData.startDate);
+        var endDate = calendarData.endDate !== undefined && new Date(calendarData.endDate);
+        if (startDate !== undefined && endDate !== undefined) {
+            window.plugins.calendar.openCalendar(startDate);
+        }
+    }
+    return false;
+}
+
+function openCalendarLink () {
+    var data = getCurrentPageData();
+    var calendarData = getCalendarData();
+    if (calendarData !== undefined) {
+        var startDate = calendarData.startDate !== undefined && new Date(calendarData.startDate);
+        var endDate = calendarData.endDate !== undefined && new Date(calendarData.endDate);
+        if (startDate !== undefined && endDate !== undefined) {
+            window.plugins.calendar.createEventWithOptions(
+                data.title,
+                data.location || '',
+                "no",
+                startDate,
+                endDate,
+                {},
+                function (e){
+                    localSchedule.add(data.eventID);
+                    //update add to calendar state to show registered, disable listener
+                    //on story load, check registered status and update button onload
+
+                    console.log(e);
+                    switchCalendarLink();
+                    justOpenCalendar();
+                },
+                function (e){
+                    console.log(e)
+                }
+            );
+        }
+    }
+    //title, location, notes, startDate, endDate, options, successCallback, errorCallback
 }
 
 function notLast(id) {
@@ -329,6 +434,84 @@ function showAndUpdate(index) {
   });
 }
 
+function submitForm (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var json;
+    var form = document.getElementById('registration-form');
+    if (window.localStorage !== undefined && window.localStorage.LocalProfileSetting !== undefined) {
+        json = JSON.parse(localStorage.LocalProfileSetting);
+        var isRejected = false;
+        ['firstName', 'lastName', 'email', 'organization'].map(function (e) {
+            if (json !== undefined && json[e] !== undefined) {
+                if (json[e] === "") {
+                    if (!isRejected) {
+                        rejectFormSubmission("" + e + " was missing");
+                        isRejected = true;
+                    }
+                }
+            }
+        });
+
+        if (!isEmailValid(json['email'])) {
+            isRejected = true;
+            console.log('email rejected')
+        }
+        //TODO: not just whitespace in fields
+        //
+        if (isRejected === false) {
+            $("#firstnameEventReg").val(json.firstName);
+            $("#lastnameEventReg").val(json.lastName);
+            $("#institutionEventReg").val(json.organization);
+            $("#contactemailEventReg").val(json.email);
+            $("#isPressMember").prop('checked', json.press);
+            $.ajax({
+                url:'http://carnegieendowment.org/events/forms/index.cfm?fa=register',
+                type:'post',
+                data: $('#eventRegistration').serialize(),
+                success: function (e) {
+                    var response;
+                    try {
+                        response = e && JSON.parse(e);
+                    } catch (e) {
+                        console.log('post fail', e);
+                    }
+                    if (response !== undefined) {
+                        console.log('post success', response);
+                        var page = $(event.currentTarget).closest('.page').data().object.eventID;
+                        console.log('ID: ' + id);
+
+                        if (id) {
+                            localRegister.add('' + id);
+                            switchRegisterLink();
+                        }
+
+                    }
+                },
+                error: function (e) {
+                    console.log('post error', e);
+                }
+            });
+        }
+    } else {
+        rejectFormSubmission("no local data available");
+    }
+}
+
+function isEmailValid (email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+
+function rejectFormSubmission (message) {
+    console.log(message);
+    notify.alert('Tap the gear icon from the story list view to provide your information.')
+}
+
 module.exports = {
-  show: show, next: next, previous: previous, hide: hideTextResize, updateSliderUI: updateSliderUI
+    show: show,
+    next: next,
+    previous: previous,
+    hide: hideTextResize,
+    updateSliderUI: updateSliderUI
 };

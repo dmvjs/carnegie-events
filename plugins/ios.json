@@ -7,6 +7,13 @@
         "files": {}
     },
     "installed_plugins": {
+        "com.bunkerpalace.cordova.YoutubeVideoPlayer": {
+            "PACKAGE_NAME": "com.ceip.events"
+        },
+        "cordova-plugin-calendar": {
+            "CALENDAR_USAGE_DESCRIPTION": "This app uses your calendar",
+            "PACKAGE_NAME": "com.ceip.events"
+        },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.ceip.events"
         },
@@ -50,13 +57,6 @@
             "PACKAGE_NAME": "com.ceip.events"
         },
         "cordova-plugin-x-socialsharing": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "com.bunkerpalace.cordova.YoutubeVideoPlayer": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-calendar": {
-            "CALENDAR_USAGE_DESCRIPTION": "This app uses your calendar",
             "PACKAGE_NAME": "com.ceip.events"
         }
     },

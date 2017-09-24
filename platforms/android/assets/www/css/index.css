@@ -96,14 +96,34 @@ header a.spanner {
     float: left;
 }
 
+.tablet header a.spanner {
+    width: calc(100% - 132px);
+}
+
+section.tv .tv-container {
+    position: absolute;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: calc(100% - 40px);
+    margin: 20px;
+    background-color: white;
+    text-align: center;
+    height: calc(100% - 40px);
+}
+
 /* header styles */
 
 header {
-    z-index: 999;
+    z-index: 2147483647 !important;
     height: 44px;
     background-color: #001c3d;
     background-image: none;
     padding-top: 20px;
+    position: absolute;
+    top: 0;
+    bottom: 64px;
+    left: 0;
+    right: 0;
 }
 
 .android header {
@@ -128,17 +148,18 @@ header.stay {
 }
 
 header .story-list,
-header .menu {
+header .menu,
+header .tv {
     height: 44px;
     background: url('../img/header-story.png');
-    background-color: #001c3d;
     background-size: auto 44px;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .tablet header .story-list,
-.tablet header .menu {
+.tablet header .menu ,
+.tablet header .tv {
     height: 66px;
     background-size: auto 66px;
 }
@@ -148,7 +169,6 @@ header .story {
     background: url('../img/header-story.png');
     background-size: auto 44px;
     background-repeat: no-repeat;
-    background-color: #001c3d;
     background-position: center;
 }
 
@@ -159,31 +179,31 @@ header .story {
 
 header .story-list,
 header .menu,
-header .story {
+header .story,
+header .tv  {
     display: none;
     -webkit-transition: opacity 200ms linear;
     transition: opacity 200ms linear;
 }
 
-header .story-list .show-menu,
-header .menu .show-menu,
-header .story-list .show-tv {
+header .show-menu,
+header .show-menu,
+header .show-tv {
     height: 44px;
     width: 44px;
     float: right;
     background-image: url('../img/gear.svg');
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 77% 77%;
+    background-size: 100% 100%;
 }
 
-header .story-list .show-tv {
+header .show-tv {
     background-image: url('../img/tv.svg');
     float: left;
 }
 
-.arabic-ui header .story-list .show-menu,
-.arabic-ui header .menu .show-menu {
+.arabic-ui header .show-menu{
     float: left;
     -moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
@@ -193,7 +213,8 @@ header .story-list .show-tv {
 
 .tablet header .story-list .show-menu,
 .tablet header .story-list .show-tv,
-.tablet header .menu .show-menu {
+.tablet header .menu .show-menu,
+.tablet header .tv .show-menu{
     height: 66px;
     width: 66px;
     background-size: 77% 77%;
@@ -201,24 +222,27 @@ header .story-list .show-tv {
 
 header .story-list.active,
 header .menu.active,
-header .story.active {
+header .story.active,
+header .tv.active {
     display: block;
 }
 
 header .story-list.showing,
 header .menu.showing,
-header .story.showing {
+header .story.showing,
+header .tv.showing {
     opacity: 1.0;
 }
 
 header .story-list.hiding,
 header .menu.hiding,
-header .story.hiding {
+header .story.hiding,
+header .tv.hiding {
     opacity: 0.0;
 }
 
-header .story-list .show-tv.active {
-    background-image: url('../img/tv-white.svg');
+header .show-tv.active {
+    background-image: url('../img/tv-blue.svg');
 }
 
 header .menu .show-menu {
@@ -226,11 +250,11 @@ header .menu .show-menu {
 }
 
 header .story-list .show-menu.active {
-    background-image: url('../img/gear-white.svg');
+    background-image: url('../img/gear-blue.svg');
 }
 
 header .menu .show-menu.active {
-    background-image: url('../img/gear-white.svg');
+    background-image: url('../img/gear-blue.svg');
 }
 
 header .menu .offline {
@@ -316,6 +340,10 @@ header .story .back.active .label {
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
+}
+
+section.form {
+    display: none;
 }
 
 header .story .btn-group {
@@ -460,7 +488,6 @@ header .story .btn-group .next {
     transform: translate3d(-100%, 0, 0);
     -webkit-transition-duration: 500ms;
     transition-duration: 500ms;
-    background-color: #f9f9f9;
     bottom: 33px;
 }
 
@@ -533,7 +560,7 @@ section.story-list .story-item .check-button {
     float: left;
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: 100% 100%;
+    background-size: 112% 112%;
 }
 
 section.story-list .story-item .check-button {
@@ -555,7 +582,7 @@ section.story-list .story-item .file-button {
     float: right;
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: 100% 100%;
+    background-size: 66% 66%;
 }
 
 .tablet section.story-list .story-item .check-button,
@@ -566,7 +593,7 @@ section.story-list .story-item .file-button {
 .tablet section.story-list .story-item .file-button {
     width: 72px;
     height: 72px;
-    background-size: 75% 75%;
+    background-size: 77% 77%;
 }
 
 section.story-list .story-item .video-button {
@@ -689,8 +716,10 @@ section.story-list li .story-image {
 }
 
 .footer-box .footer-button-container {
-    width: 100%;
-    height: 33px;
+    width: calc(100% - 8px);
+    height: 24px;
+    font-size: 12px;
+    padding: 4px
 }
 
 .footer-box .footer-button-container .my-schedule-button,
@@ -699,15 +728,27 @@ section.story-list li .story-image {
     float: left;
     width: 50%;
     background-color: #f9f9f9;
-    height: 33px;
+    height: 24px;
     text-transform: uppercase;
     color: #635a4f;
-    line-height: 33px;
+    line-height: 24px;
     text-align: center;
 }
 
-.arabic-ui section.story-list .my-schedule-button,
-.arabic-ui section.story-list .all-events-button {
+.footer-box .footer-button-container .my-schedule-button:before {
+    background-image: url("../img/checkbox-checked-brown.svg");
+    background-repeat: no-repeat;
+    background-size: 32px;
+    background-position-y: -5px;
+    content: "";
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    margin-left: -27px;
+}
+
+.arabic-ui .footer-box .footer-button-container .my-schedule-button,
+.arabic-ui .footer-box .footer-button-container .all-events-button {
     float: right;
 }
 
@@ -715,6 +756,11 @@ section.story-list li .story-image {
 .footer-box .footer-button-container .all-events-button.active {
     background-color: #635a4f;
     color: #f9f9f9;
+}
+
+
+.footer-box .footer-button-container .my-schedule-button.active:before {
+    background-image: url("../img/checkbox-checked-white.svg");
 }
 
 section.menu .menu-container {
@@ -741,12 +787,18 @@ section.menu form, section.menu form input {
 
 section.menu form, section.menu form input[type=email],
 section.menu form, section.menu form input[type=text]{
-    padding: 10px;
+    padding: 4px;
 }
 
 section.menu form input {
     width: calc(100% - 20px);
     background-color: #ccc7c2;
+}
+
+#profile-submit-button-container {
+    display: block;
+    width: 100%;
+    text-align: center;
 }
 
 
@@ -755,7 +807,7 @@ section.menu form input[type=checkbox] {
     display: inline-block;
 }
 section.menu form label {
-    font-size: 13px;
+    font-size: 11px;
 }
 
 
@@ -771,11 +823,13 @@ section.menu .menu-text-container p {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 99;
+    z-index: 9;
+    padding: 10px;
+    background-color: #001c3d;
 }
 
 .tablet #player {
-    top: 86px;
+    top: 110px;
 }
 
 .arabic-ui section.menu .menu-item-box {
@@ -806,20 +860,34 @@ section.story-list .story-image img {
 
 /* end of story list styles */
 
-section.menu {
-    display: block;
-    z-index: 2;
-    background-color: #001c3d;
-}
-
-section.menu {
-    -webkit-transform: translate3d(0, 100%, 0);
-    transform: translate3d(0, 100%, 0);
+#player {
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
     -webkit-transition-duration: 500ms;
     transition-duration: 500ms;
 }
 
-section.menu.active {
+#player.active {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+section.menu,
+section.tv {
+    display: block;
+    z-index: 2;
+    background-color: rgba(0,28,61, 0.91);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+section.menu, section.tv {
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+    -webkit-transition-duration: 500ms;
+    transition-duration: 500ms;
+}
+
+section.menu.active, section.tv.active {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
@@ -999,6 +1067,14 @@ section.menu input {
 
 section.menu #profile-submit-button {
     margin: 10px auto;
+    background-color: #0079ff;
+    -webkit-appearance: none;
+    text-transform: uppercase;
+    padding: 4px 30px;
+    color: white;
+    font-size: 12px;
+    border-radius: 0;
+    width: auto !important;
 }
 
 
@@ -1033,6 +1109,30 @@ section.story {
 section.story.active {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
+}
+
+section.story .has-ticket {
+    display: inline-block;
+    height: 44px;
+    line-height: 44px;
+    width: 50%;
+    font-size: 16px;
+    background-color: #d68019;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+}
+
+section.story .add-to-calendar {
+    display: inline-block;
+    height: 44px;
+    line-height: 44px;
+    width: 50%;
+    font-size: 16px;
+    background-color: #00caf2;
+    color: white;
+    text-decoration: none;
+    text-align: center;
 }
 
 section.story.full-height {
@@ -1517,7 +1617,7 @@ footer.story-footer .text-resize .text-resize-slider {
             linear,
             left top,
             right top,
-            color-stop(0.5, #007aff),
+            color-stop(0.5, #0079ff),
             color-stop(0.5, #b8b7b8)
     );
 }
@@ -1775,5 +1875,35 @@ div#accordion strong.heading span {
 div#accordion strong.heading span.current span {
     background-position: -415px -565px;
 }
+
+/* video list start */
+
+.video-list {
+    display: block;
+}
+
+.video-list-item {
+
+}
+
+.video-list-item-image {
+     margin: 20px 20px 10px;
+}
+
+.video-list-item-image img {
+    display: block;
+    width: 100%;
+}
+
+.video-list-item-text {
+    margin: 10px 20px 20px;
+    font-weight: bold;
+    line-height: 1.1em;
+}
+
+/* video list end */
+
+
+
 
 

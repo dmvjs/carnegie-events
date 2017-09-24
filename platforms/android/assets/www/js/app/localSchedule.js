@@ -15,14 +15,14 @@ function add (id) {
     }
 }
 
-// string id adds event to calendar
+// string id returns true if exists
 function has (id) {
     var o = get() || {};
     return o[id] === 1;
 }
 
 
-// string id adds event to calendar
+// string id removes event from calendar
 function remove (id) {
     var o = get() || {};
     if (has(id)) {

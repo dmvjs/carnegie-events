@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="00001" id="com.ceip.events" ios-CFBundleVersion="3" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="00001" id="com.ceip.events" ios-CFBundleVersion="6" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <feature name="Carrier">
         <param name="android-package" value="com.dtmtec.Carrier" />
     </feature>
@@ -50,6 +50,14 @@
     <feature name="SocialSharing">
         <param name="android-package" value="nl.xservices.plugins.SocialSharing" />
     </feature>
+    <feature name="Calendar">
+        <param name="android-package" value="nl.xservices.plugins.Calendar" />
+    </feature>
+    <widget>
+        <feature name="YoutubeVideoPlayer">
+            <param name="android-package" value="com.bunkerpalace.cordova.YoutubeVideoPlayer" />
+        </feature>
+    </widget>
     <feature name="SafariViewController">
         <param name="android-package" value="com.customtabplugin.ChromeCustomTabPlugin" />
         <param name="onload" value="true" />
@@ -102,12 +110,4 @@
     <preference name="HeaderColor" value="#001c3d" />
     <preference name="AllowInlineMediaPlayback" value="true" />
     <preference name="MediaPlaybackRequiresUserAction" value="false" />
-    <widget>
-        <feature name="YoutubeVideoPlayer">
-            <param name="android-package" value="com.bunkerpalace.cordova.YoutubeVideoPlayer" />
-        </feature>
-    </widget>
-    <feature name="Calendar">
-        <param name="android-package" value="nl.xservices.plugins.Calendar" />
-    </feature>
 </widget>
