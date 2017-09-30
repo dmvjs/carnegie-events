@@ -84,7 +84,6 @@
         <splash height="1242" src="res/screen/ios/Default-Landscape-736h.png" width="2208" />
     </platform>
     <engine name="android" spec="~6.1.2" />
-    <engine name="ios" spec="^4.5.0" />
     <plugin name="com.bunkerpalace.cordova.YoutubeVideoPlayer" spec="git+https://github.com/JonSmart/CordovaYoutubeVideoPlayer.git" />
     <plugin name="cordova-plugin-calendar" spec="^4.6.0">
         <variable name="CALENDAR_USAGE_DESCRIPTION" value="This app uses your calendar" />

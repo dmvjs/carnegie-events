@@ -1934,47 +1934,8 @@ var config = require('../config')
 	, share = ['ios', 'android', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
 	, browser = ['ios', 'android', 'blackberry 10', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
 	, $story = $('section.story')
-	, slider = document.getElementById('text-resize-input')
 	, feedObj
 	, index;
-
-if (share && plugins && plugins.socialsharing) {
-  $(document)
-		.on('touchstart', 'footer.story-footer .share', function (e) {
-			$(e.currentTarget).addClass('active');
-		})
-		.on('touchend', 'footer.story-footer .share', function (e) {
-			var ui = $(e.currentTarget);
-			if ($(e.currentTarget).hasClass('disabled') === false) {
-				setTimeout(function () {
-					hideTextResize();
-					if (typeof index !== 'undefined' && feedObj && navigator.connection.type !== 'none') {
-						window.plugins.socialsharing.share(
-								'I\'m currently reading ' + (feedObj.story ? feedObj.story[index].title : feedObj.item[index].title),
-							(feedObj.story ? feedObj.story[index].title : feedObj.item[index].title),
-								(feedObj.story ? (feedObj.story[index].image) : (feedObj.item[index].image)) || config.missingImage,
-							encodeURI(feedObj.story ? feedObj.story[index].link : feedObj.item[index].link)
-						);
-						if (config.track && analytics) {
-							analytics.trackEvent('Story', 'Share', 'Share Clicked', 10);
-						}
-					} else {
-						if (navigator.connection.type === 'none') {
-							notify.alert(config.connectionMessage);
-						} else {
-							notify.alert('Sorry, a problem occurred while trying to share this post')
-						}
-					}
-					ui.removeClass('active');
-				}, 0)
-			} else {
-				ui.removeClass('active');
-			}
-		})
-} else {
-  //remove footer & make story window taller, sharing not supported
-  $('footer.story-footer button.share').addClass('disabled');
-}
 
 if (browser) {
   $(document).on('click', 'section.story .current a', function (e) {
@@ -1988,7 +1949,7 @@ if (browser) {
         if (config.track && analytics) {
           analytics.trackEvent('Story', 'Link', 'Page Anchor Clicked', 10);
         }
-	      e.preventDefault()
+	      e.preventDefault();
 	      $('.current').scrollTop($(href).position().top);
       } else {
         e.preventDefault();
@@ -2028,7 +1989,6 @@ $(document)
 				analytics.trackEvent('Story', 'UI', 'Text Resize Opened', 10);
 			}
 			ui.removeClass('active');
-            //updateSliderUI();
 		}, 10)
 	});
 
@@ -2036,27 +1996,6 @@ function hideTextResize() {
   $('.text-resize').removeClass('active');
     $('footer.story-footer').removeClass('active');
 }
-
-/*function updateSliderUI() {
-    setTimeout(function () {
-        var val = parseFloat(slider.value)
-            , value = (slider.value - slider.min) / (slider.max - slider.min);
-
-        config.storyFontSize = val;
-
-        if (window.__languageForCarnegie === "ar") {
-            slider.style.backgroundImage =
-                '-webkit-gradient(linear, right top, left top, color-stop(' + value + ', #007aff), color-stop(' + value + ', #b8b7b8))';
-        } else {
-            slider.style.backgroundImage =
-                '-webkit-gradient(linear, left top, right top, color-stop(' + value + ', #007aff), color-stop(' + value + ', #b8b7b8))';
-        }
-        $story.css('font-size', val + 'em');
-        slider.style.direction = window.__languageForCarnegie === "ar" ? "rtl" : "ltr";
-    }, 0)
-}
-
-slider.onchange = updateSliderUI;*/
 
 function show(i, feed) {
   return new Promise(function (resolve, reject) {
@@ -2481,8 +2420,7 @@ module.exports = {
     show: show,
     next: next,
     previous: previous,
-    hide: hideTextResize/*,
-    updateSliderUI: updateSliderUI*/
+    hide: hideTextResize
 };
 },{"../../util/date":45,"../../util/notify":47,"../access":1,"../config":8,"../localRegister":13,"../localSchedule":14}],24:[function(require,module,exports){
 /*global require, module, $*/

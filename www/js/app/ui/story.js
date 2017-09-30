@@ -12,44 +12,6 @@ var config = require('../config')
 	, feedObj
 	, index;
 
-if (share && plugins && plugins.socialsharing) {
-  $(document)
-		.on('touchstart', 'footer.story-footer .share', function (e) {
-			$(e.currentTarget).addClass('active');
-		})
-		.on('touchend', 'footer.story-footer .share', function (e) {
-			var ui = $(e.currentTarget);
-			if ($(e.currentTarget).hasClass('disabled') === false) {
-				setTimeout(function () {
-					hideTextResize();
-					if (typeof index !== 'undefined' && feedObj && navigator.connection.type !== 'none') {
-						window.plugins.socialsharing.share(
-								'I\'m currently reading ' + (feedObj.story ? feedObj.story[index].title : feedObj.item[index].title),
-							(feedObj.story ? feedObj.story[index].title : feedObj.item[index].title),
-								(feedObj.story ? (feedObj.story[index].image) : (feedObj.item[index].image)) || config.missingImage,
-							encodeURI(feedObj.story ? feedObj.story[index].link : feedObj.item[index].link)
-						);
-						if (config.track && analytics) {
-							analytics.trackEvent('Story', 'Share', 'Share Clicked', 10);
-						}
-					} else {
-						if (navigator.connection.type === 'none') {
-							notify.alert(config.connectionMessage);
-						} else {
-							notify.alert('Sorry, a problem occurred while trying to share this post')
-						}
-					}
-					ui.removeClass('active');
-				}, 0)
-			} else {
-				ui.removeClass('active');
-			}
-		})
-} else {
-  //remove footer & make story window taller, sharing not supported
-  $('footer.story-footer button.share').addClass('disabled');
-}
-
 if (browser) {
   $(document).on('click', 'section.story .current a', function (e) {
       var href = $(e.currentTarget).attr('href');
@@ -62,7 +24,7 @@ if (browser) {
         if (config.track && analytics) {
           analytics.trackEvent('Story', 'Link', 'Page Anchor Clicked', 10);
         }
-	      e.preventDefault()
+	      e.preventDefault();
 	      $('.current').scrollTop($(href).position().top);
       } else {
         e.preventDefault();
