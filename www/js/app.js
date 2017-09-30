@@ -1104,6 +1104,7 @@ module.exports = function (options, language) {
 },{}],17:[function(require,module,exports){
 /*global $, require, module */
 var story = require('./story')
+	, localSchedule = require('../localSchedule')
 	, toLocal = require('./getLocalizedString')
 	, localStrings = require('./localizedStrings')
 	, loading = require('./loading')
@@ -1236,9 +1237,25 @@ function show(sel) {
 
 function showStoryList() {
 	story.hide();
+	computeScheduledStories();
 	$('section.story').removeClass('active');
 	$('section.story-list').addClass('active');
 	show('.story-list');
+}
+
+function computeScheduledStories () {
+	$('.story-list .story-item').each(function (e, i, a) {
+		var $i = $(i);
+		var id = parseInt($i.find('.story-list-item-event-id').text(), 10);
+		if (localSchedule.has(id)) {
+			$i.find('.check-button').addClass('active')
+		} else {
+			$i.find('.check-button').removeClass('active')
+		}
+	});
+	if ($('.my-schedule-button').hasClass('active')) {
+		$('.story-item').show().not($('.choice-bar .check-button.active').closest('.story-item')).hide()
+	}
 }
 
 function showMenu() {
@@ -1285,7 +1302,7 @@ module.exports = {
 	, showStory: showStory
 	, updateLanguageUI: updateLanguageUI
 };
-},{"../localProfile":12,"./getLocalizedString":16,"./loading":18,"./localizedStrings":19,"./story":23,"./video":25}],18:[function(require,module,exports){
+},{"../localProfile":12,"../localSchedule":14,"./getLocalizedString":16,"./loading":18,"./localizedStrings":19,"./story":23,"./video":25}],18:[function(require,module,exports){
 function hide (){
     setTimeout(function () {
         $('.loading-ui').fadeOut();
@@ -2021,6 +2038,7 @@ function show(i, feed) {
 
       setTimeout(function () {
           resolve(200)
+          $('footer.story-footer .story-add-to-schedule').toggleClass('active', localSchedule.has(getCurrentPageData().eventID));
       }, 0)
     }, reject);
   })
@@ -2074,7 +2092,7 @@ function createPreviousAndNext() {
 function createPage(storyObj) {
     //console.log(storyObj);
   return new Promise(function (resolve, reject) {
-    var fs = config.fs.toURL()
+      var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
       , image = storyObj.image ? path + storyObj.image.split('/').pop() : config.missingImage
       , specialImage = storyObj["specialNameImage"] && path + storyObj["specialNameImage"].split('/').pop()
@@ -2203,6 +2221,7 @@ function cancelRegistration () {
     $('.cancel-registration').hide();
 }
 
+// only useful after the page is ready
 function getCurrentPageData () {
     var currentPage = $('.current .page');
     var data = currentPage && currentPage.data !== undefined && typeof currentPage.data === 'function' && currentPage.data();
@@ -2416,6 +2435,22 @@ function rejectFormSubmission (message) {
     notify.alert('Tap the gear icon to provide your information.')
 }
 
+$('footer.story-footer .story-add-to-schedule').on('click', function (e) {
+    var data = getCurrentPageData();
+    var $box = $('footer.story-footer .story-add-to-schedule');
+    if (data !== undefined && data.eventID !== undefined) {
+        if (localSchedule.has(data.eventID)) {
+            localSchedule.remove(data.eventID);
+            $box.removeClass('active');
+        } else {
+            localSchedule.add(data.eventID);
+            $box.addClass('active');
+        }
+    } else {
+        notify.alert('An error occurred while adding this event to your schedule');
+    }
+});
+
 module.exports = {
     show: show,
     next: next,
@@ -2488,13 +2523,18 @@ function show(feedObj, forceActive) {
             })  , storyDate = $('<div/>', {
                 addClass: 'story-date'
                 , text: date.getStoryDate(element, feedConfig.language)
-            })  , storyText = $('<div/>', {
+            })
+                , storyText = $('<div/>', {
                 addClass: 'story-text'
-            }).append(storyLocation).append(storyTitle).append(storyDate)
+            }).append([storyLocation, storyTitle, storyDate])
                 , storyImage = $('<img>', {
                 src: image
                 , addClass: 'story-image'
-            })  , hairline = $('<div/>', {
+            })  , storyEventID = $('<div/>', {
+                addClass: 'story-list-item-event-id',
+                text: element.eventID
+            }).hide()
+                , hairline = $('<div/>', {
                 addClass: 'hairline'
             })  , checkButton = $('<div/>', {
                 addClass: 'check-button'
@@ -2520,7 +2560,7 @@ function show(feedObj, forceActive) {
             .append(!!element.resourceList ? fileButton : null)
                 , storyItem = $('<div/>', {
                 addClass: 'story-item'
-            }).append(hairline).append(storyImage).append(storyText).append(choiceBar)
+            }).append([storyEventID, hairline, storyImage, storyText, choiceBar])
                 , li = $('<li/>', {}).append(storyItem);
 
             ul.append(li);
@@ -2562,6 +2602,7 @@ function show(feedObj, forceActive) {
                 localMenuView.set(true);
                 eventsButton.removeClass('active');
                 $('.story-item').not($('.choice-bar .check-button.active').closest('.story-item')).slideUp()
+
             } else if ($(this).is(eventsButton)){
                 localMenuView.set(false);
                 scheduleButton.removeClass('active');
