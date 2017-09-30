@@ -96,6 +96,7 @@ function show(i, feed) {
 
       setTimeout(function () {
           resolve(200)
+          $('footer.story-footer .story-add-to-schedule').toggleClass('active', localSchedule.has(getCurrentPageData().eventID));
       }, 0)
     }, reject);
   })
@@ -149,7 +150,7 @@ function createPreviousAndNext() {
 function createPage(storyObj) {
     //console.log(storyObj);
   return new Promise(function (resolve, reject) {
-    var fs = config.fs.toURL()
+      var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
       , image = storyObj.image ? path + storyObj.image.split('/').pop() : config.missingImage
       , specialImage = storyObj["specialNameImage"] && path + storyObj["specialNameImage"].split('/').pop()
@@ -278,6 +279,7 @@ function cancelRegistration () {
     $('.cancel-registration').hide();
 }
 
+// only useful after the page is ready
 function getCurrentPageData () {
     var currentPage = $('.current .page');
     var data = currentPage && currentPage.data !== undefined && typeof currentPage.data === 'function' && currentPage.data();
@@ -490,6 +492,22 @@ function rejectFormSubmission (message) {
     console.log(message);
     notify.alert('Tap the gear icon to provide your information.')
 }
+
+$('footer.story-footer .story-add-to-schedule').on('click', function (e) {
+    var data = getCurrentPageData();
+    var $box = $('footer.story-footer .story-add-to-schedule');
+    if (data !== undefined && data.eventID !== undefined) {
+        if (localSchedule.has(data.eventID)) {
+            localSchedule.remove(data.eventID);
+            $box.removeClass('active');
+        } else {
+            localSchedule.add(data.eventID);
+            $box.addClass('active');
+        }
+    } else {
+        notify.alert('An error occurred while adding this event to your schedule');
+    }
+});
 
 module.exports = {
     show: show,

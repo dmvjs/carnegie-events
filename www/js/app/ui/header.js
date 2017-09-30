@@ -1,5 +1,6 @@
 /*global $, require, module */
 var story = require('./story')
+	, localSchedule = require('../localSchedule')
 	, toLocal = require('./getLocalizedString')
 	, localStrings = require('./localizedStrings')
 	, loading = require('./loading')
@@ -132,9 +133,25 @@ function show(sel) {
 
 function showStoryList() {
 	story.hide();
+	computeScheduledStories();
 	$('section.story').removeClass('active');
 	$('section.story-list').addClass('active');
 	show('.story-list');
+}
+
+function computeScheduledStories () {
+	$('.story-list .story-item').each(function (e, i, a) {
+		var $i = $(i);
+		var id = parseInt($i.find('.story-list-item-event-id').text(), 10);
+		if (localSchedule.has(id)) {
+			$i.find('.check-button').addClass('active')
+		} else {
+			$i.find('.check-button').removeClass('active')
+		}
+	});
+	if ($('.my-schedule-button').hasClass('active')) {
+		$('.story-item').show().not($('.choice-bar .check-button.active').closest('.story-item')).hide()
+	}
 }
 
 function showMenu() {

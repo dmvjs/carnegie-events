@@ -63,13 +63,18 @@ function show(feedObj, forceActive) {
             })  , storyDate = $('<div/>', {
                 addClass: 'story-date'
                 , text: date.getStoryDate(element, feedConfig.language)
-            })  , storyText = $('<div/>', {
+            })
+                , storyText = $('<div/>', {
                 addClass: 'story-text'
-            }).append(storyLocation).append(storyTitle).append(storyDate)
+            }).append([storyLocation, storyTitle, storyDate])
                 , storyImage = $('<img>', {
                 src: image
                 , addClass: 'story-image'
-            })  , hairline = $('<div/>', {
+            })  , storyEventID = $('<div/>', {
+                addClass: 'story-list-item-event-id',
+                text: element.eventID
+            }).hide()
+                , hairline = $('<div/>', {
                 addClass: 'hairline'
             })  , checkButton = $('<div/>', {
                 addClass: 'check-button'
@@ -95,7 +100,7 @@ function show(feedObj, forceActive) {
             .append(!!element.resourceList ? fileButton : null)
                 , storyItem = $('<div/>', {
                 addClass: 'story-item'
-            }).append(hairline).append(storyImage).append(storyText).append(choiceBar)
+            }).append([storyEventID, hairline, storyImage, storyText, choiceBar])
                 , li = $('<li/>', {}).append(storyItem);
 
             ul.append(li);
@@ -137,6 +142,7 @@ function show(feedObj, forceActive) {
                 localMenuView.set(true);
                 eventsButton.removeClass('active');
                 $('.story-item').not($('.choice-bar .check-button.active').closest('.story-item')).slideUp()
+
             } else if ($(this).is(eventsButton)){
                 localMenuView.set(false);
                 scheduleButton.removeClass('active');

@@ -1544,6 +1544,22 @@ footer.story-footer.active {
     transition-duration: 350ms;
 }
 
+footer.story-footer .story-add-to-schedule {
+    line-height: 44px;
+    padding: 0 10px 0 0;
+    background-repeat: no-repeat;
+    background-image: url('../img/checkbox-checked-brown.svg');
+    background-size: 36px;
+    background-position: 0 50%;
+    text-indent: 36px;
+    display: inline-block;
+    margin: 0;
+}
+
+footer.story-footer .story-add-to-schedule.active {
+    background-image: url('../img/checkbox-checked-blue.svg');
+}
+
 footer.story-footer .text-left,
 footer.story-footer .text-right {
     width: 15%;
