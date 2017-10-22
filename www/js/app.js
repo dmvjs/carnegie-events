@@ -344,7 +344,7 @@ module.exports = {
     , refresh: refresh
     , getFeedsFromConfig: getFeedsFromConfig
 };
-},{"../io/createFileWithContents":30,"../io/doesFileExist":31,"../io/downloadExternalFile":32,"../io/getFile":34,"../io/getFileContents":35,"../io/getFileList":37,"../io/removeFile":42,"../io/writeFile":43,"../util/notify":47,"./config":8,"./config-menu":6,"./xmlToJson":26}],2:[function(require,module,exports){
+},{"../io/createFileWithContents":31,"../io/doesFileExist":32,"../io/downloadExternalFile":33,"../io/getFile":35,"../io/getFileContents":36,"../io/getFileList":38,"../io/removeFile":43,"../io/writeFile":44,"../util/notify":48,"./config":8,"./config-menu":6,"./xmlToJson":27}],2:[function(require,module,exports){
 module.exports = {
     track: true
     , trackId: 'UA-31877-35'
@@ -845,7 +845,7 @@ module.exports = function () {
 		doesFileExist(config.missingImage.split('/').pop()).then(init, getImage);
 	})
 }
-},{"../io/doesFileExist":31,"../io/downloadExternalFile":32,"../util/notify":47,"./config":8,"./ui/getLocalizedString":16,"./ui/localizedStrings":19}],10:[function(require,module,exports){
+},{"../io/doesFileExist":32,"../io/downloadExternalFile":33,"../util/notify":48,"./config":8,"./ui/getLocalizedString":16,"./ui/localizedStrings":19}],10:[function(require,module,exports){
 var header = require('./ui/header');
 document.addEventListener("backbutton", onBackKeyDown, false);
 
@@ -1167,6 +1167,7 @@ $(document)
 		e.preventDefault();
 		e.stopPropagation();
 		e.stopImmediatePropagation();
+		$('section.twitter').removeClass('active');
 		showStoryList();
 		$(e.currentTarget).removeClass('active');
 		return false;
@@ -1302,7 +1303,7 @@ module.exports = {
 	, showStory: showStory
 	, updateLanguageUI: updateLanguageUI
 };
-},{"../localProfile":12,"../localSchedule":14,"./getLocalizedString":16,"./loading":18,"./localizedStrings":19,"./story":23,"./video":25}],18:[function(require,module,exports){
+},{"../localProfile":12,"../localSchedule":14,"./getLocalizedString":16,"./loading":18,"./localizedStrings":19,"./story":23,"./video":26}],18:[function(require,module,exports){
 function hide (){
     setTimeout(function () {
         $('.loading-ui').fadeOut();
@@ -1691,7 +1692,7 @@ $('#profile-submit-button').on('click', function (e) {
 	// check items for validation
 	// submit only if ok
 });
-},{"../../io/doesFileExist":31,"../../io/getFileContents":35,"../../util/date":45,"../../util/notify":47,"../access":1,"../config":8,"../config-menu":6,"./getLocalizedString":16,"./header":17,"./loading":18,"./localizedStrings":19,"./storyList":24}],21:[function(require,module,exports){
+},{"../../io/doesFileExist":32,"../../io/getFileContents":36,"../../util/date":46,"../../util/notify":48,"../access":1,"../config":8,"../config-menu":6,"./getLocalizedString":16,"./header":17,"./loading":18,"./localizedStrings":19,"./storyList":25}],21:[function(require,module,exports){
 var access = require('../access');
 
 Hammer.defaults.stop_browser_behavior.touchAction = 'pan-y';
@@ -1948,9 +1949,7 @@ var config = require('../config')
 	, access = require('../access')
 	, notify = require('../../util/notify')
     , date = require("../../util/date")
-	, share = ['ios', 'android', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
-	, browser = ['ios', 'android', 'blackberry 10', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
-	, $story = $('section.story')
+ 	, browser = ['ios', 'android', 'blackberry 10', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
 	, feedObj
 	, index;
 
@@ -2147,6 +2146,7 @@ function createPage(storyObj) {
       /*if (!specialImage) {
           page.append(topBar)
       }*/
+      $('footer.story-footer a.twitter').toggle(storyObj.twitterID !== undefined);
 
       page.append([topBar, storyTop, storySummaryContainer, storyText]);
 
@@ -2455,9 +2455,46 @@ module.exports = {
     show: show,
     next: next,
     previous: previous,
-    hide: hideTextResize
+    hide: hideTextResize,
+    getCurrentPageData: getCurrentPageData
 };
-},{"../../util/date":45,"../../util/notify":47,"../access":1,"../config":8,"../localRegister":13,"../localSchedule":14}],24:[function(require,module,exports){
+},{"../../util/date":46,"../../util/notify":48,"../access":1,"../config":8,"../localRegister":13,"../localSchedule":14}],24:[function(require,module,exports){
+var story = require('./story');
+
+$('footer.story-footer .twitter').on('click', function () {
+    $('#twitter-container').empty();
+    var data = story.getCurrentPageData();
+    if (data !== undefined && data.twitterID !== undefined) {
+        window.twttr.widgets.createTimeline(
+            {
+                sourceType: 'widget',
+                widgetId: data.twitterID
+            },
+            document.getElementById('twitter-container')
+        );
+        $('section.twitter').toggleClass('active')
+    }
+});
+
+function showTwitterInFooter () {
+    $(data.twitterID).show()
+}
+
+function showTwitterInFooterWithLogic () {
+    var data = story.getCurrentPageData();
+    $(data.twitterID).toggle((data !== undefined && data.twitterID !== undefined))
+}
+
+function hideTwitterInFooter () {
+    $(data.twitterID).hide();
+}
+
+module.exports = {
+    showTwitterInFooter: showTwitterInFooter,
+    hideTwitterInFooter: hideTwitterInFooter,
+    showTwitterInFooterWithLogic: showTwitterInFooterWithLogic
+};
+},{"./story":23}],25:[function(require,module,exports){
 /*global require, module, $*/
 var config = require('../config')
     , localSchedule = require('../localSchedule')
@@ -2555,7 +2592,7 @@ function show(feedObj, forceActive) {
             .append(checkButton)
             .append(!!element.regLink ? ticketButton : null)
             .append(!!element.livestream && element.liveStream !== "False" ? videoButton : null)
-            .append(!!element["hashtag "] ? twitterButton : null)
+            .append(element.twitterID !== undefined ? twitterButton : null)
             .append(!!element["poll "] ? contactButton : null)
             .append(!!element.resourceList ? fileButton : null)
                 , storyItem = $('<div/>', {
@@ -2669,7 +2706,7 @@ $(document).on('access.refresh', function (e, obj) {
 module.exports = {
     show: show
 };
-},{"../../util/connection":44,"../../util/date":45,"../../util/notify":47,"../access":1,"../config":8,"../localMenuView":11,"../localSchedule":14,"./getLocalizedString":16,"./header":17,"./loading":18,"./localizedStrings":19,"./refresh":21,"./story":23}],25:[function(require,module,exports){
+},{"../../util/connection":45,"../../util/date":46,"../../util/notify":48,"../access":1,"../config":8,"../localMenuView":11,"../localSchedule":14,"./getLocalizedString":16,"./header":17,"./loading":18,"./localizedStrings":19,"./refresh":21,"./story":23}],26:[function(require,module,exports){
 var youtube = YoutubeVideoPlayer;
 
 function getVideoItems () {
@@ -2735,7 +2772,7 @@ module.exports = {
     get: getVideoItems,
     removeListeners: removeAllClickListeners
 };
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /*global module, require*/
 module.exports = function (res) {
 	var feedObject = {item:[]}
@@ -2765,7 +2802,7 @@ module.exports = function (res) {
 
   return feedObject;
 };
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -2816,7 +2853,7 @@ module.exports = (function () {
 		}
 }());
 
-},{"./app/analyticsConfig":2,"./app/history":10,"./init":28}],28:[function(require,module,exports){
+},{"./app/analyticsConfig":2,"./app/history":10,"./init":29}],29:[function(require,module,exports){
 /*global module, require, $*/
 module.exports = (function () {
 	var access = require('./app/access')
@@ -2827,6 +2864,7 @@ module.exports = (function () {
 		, storyList = require('./app/ui/storyList')
 		, notify = require('./util/notify')
 		, header = require('./app/ui/header')
+		, storyFooter = require('./app/ui/storyFooter')
 		, doesFileExist = require('./io/doesFileExist')
 		, getFileContents = require('./io/getFileContents')
 		, downloadMissingImage = require('./app/downloadMissingImage')
@@ -2897,7 +2935,7 @@ module.exports = (function () {
 		return 0;
 	}
 }());
-},{"./app/access":1,"./app/downloadMissingImage":9,"./app/ui/getLocalizedString":16,"./app/ui/header":17,"./app/ui/localizedStrings":19,"./app/ui/menu":20,"./app/ui/responsive":22,"./app/ui/storyList":24,"./io/createDir":29,"./io/doesFileExist":31,"./io/getFileContents":35,"./util/connection":44,"./util/date":45,"./util/err":46,"./util/notify":47}],29:[function(require,module,exports){
+},{"./app/access":1,"./app/downloadMissingImage":9,"./app/ui/getLocalizedString":16,"./app/ui/header":17,"./app/ui/localizedStrings":19,"./app/ui/menu":20,"./app/ui/responsive":22,"./app/ui/storyFooter":24,"./app/ui/storyList":25,"./io/createDir":30,"./io/doesFileExist":32,"./io/getFileContents":36,"./util/connection":45,"./util/date":46,"./util/err":47,"./util/notify":48}],30:[function(require,module,exports){
 var getFileSystem = require('./getFileSystem')
 	, getFile = require('./getFile')
 	, makeDir = require('./makeDir')
@@ -2915,7 +2953,7 @@ module.exports = function () {
 		}, reject);
 	})
 };
-},{"../app/config":8,"../util/notify":47,"./getFile":34,"./getFileSystem":38,"./makeDir":39}],30:[function(require,module,exports){
+},{"../app/config":8,"../util/notify":48,"./getFile":35,"./getFileSystem":39,"./makeDir":40}],31:[function(require,module,exports){
 /*global module, require*/
 var getFileSystem = require('./getFileSystem')
 	, getFile = require('./getFile')
@@ -2950,7 +2988,7 @@ module.exports = function (filename, contents) {
 		}, reject);
 	})
 };
-},{"./getFile":34,"./getFileEntry":36,"./getFileSystem":38,"./writeFile":43}],31:[function(require,module,exports){
+},{"./getFile":35,"./getFileEntry":37,"./getFileSystem":39,"./writeFile":44}],32:[function(require,module,exports){
 var getFileSystem = require('./getFileSystem')
 	, getFile = require('./getFile');
 
@@ -2961,7 +2999,7 @@ module.exports = function (filename) {
 		}, reject)
 	})
 }
-},{"./getFile":34,"./getFileSystem":38}],32:[function(require,module,exports){
+},{"./getFile":35,"./getFileSystem":39}],33:[function(require,module,exports){
 var config = require('../app/config')
 	, getFileSystem = require('./getFileSystem')
 	, getFile = require('./getFile')
@@ -2978,7 +3016,7 @@ module.exports = function (url) {
 		}) 
 	})
 }
-},{"../app/config":8,"./downloadFile":33,"./getFile":34,"./getFileSystem":38}],33:[function(require,module,exports){
+},{"../app/config":8,"./downloadFile":34,"./getFile":35,"./getFileSystem":39}],34:[function(require,module,exports){
 var config = require('../app/config');
 
 module.exports = function (fileentry, url) {
@@ -2998,7 +3036,7 @@ module.exports = function (fileentry, url) {
     fileTransfer.download(uri, path, resolve, catchErrors, false, {})
   });
 };
-},{"../app/config":8}],34:[function(require,module,exports){
+},{"../app/config":8}],35:[function(require,module,exports){
 var config = require('../app/config');
 
 module.exports = function (filesystem, filename, create) {
@@ -3007,7 +3045,7 @@ module.exports = function (filesystem, filename, create) {
 		fs.getFile(filename, {create: !!create, exclusive: false}, resolve, reject);
 	});
 }
-},{"../app/config":8}],35:[function(require,module,exports){
+},{"../app/config":8}],36:[function(require,module,exports){
 var getFileSystem = require('./getFileSystem')
   , getFile = require('./getFile')
   , readFile = require('./readFile');
@@ -3021,13 +3059,13 @@ module.exports = function (filename) {
     }, reject);
   })
 }
-},{"./getFile":34,"./getFileSystem":38,"./readFile":41}],36:[function(require,module,exports){
+},{"./getFile":35,"./getFileSystem":39,"./readFile":42}],37:[function(require,module,exports){
 module.exports = function (fileentry) {
 	return new Promise(function (resolve, reject) {
 		fileentry.createWriter(resolve, reject);
 	})
 };
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 var getFileSystem = require('./getFileSystem')
   , readDirectory = require('./readDirectory');
 
@@ -3038,13 +3076,13 @@ module.exports = function (filename) {
     }, reject);
   })
 }
-},{"./getFileSystem":38,"./readDirectory":40}],38:[function(require,module,exports){
+},{"./getFileSystem":39,"./readDirectory":41}],39:[function(require,module,exports){
 module.exports = function () {
 	return new Promise(function (resolve, reject) {
 		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, resolve, reject)
 	})
 };
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 var config = require('../app/config');
 
 module.exports = function (filesystem, dirname) {
@@ -3053,7 +3091,7 @@ module.exports = function (filesystem, dirname) {
 		fileentry.getDirectory(dirname, {create: true, exclusive: false}, resolve, reject);
 	});
 }
-},{"../app/config":8}],40:[function(require,module,exports){
+},{"../app/config":8}],41:[function(require,module,exports){
 var config = require('../app/config');
 
 module.exports = function (filesystem) {
@@ -3064,7 +3102,7 @@ module.exports = function (filesystem) {
 		reader.readEntries(resolve, reject);
 	});
 }
-},{"../app/config":8}],41:[function(require,module,exports){
+},{"../app/config":8}],42:[function(require,module,exports){
 /*global module, require*/
 var removeFile = require('./removeFile');
 
@@ -3107,13 +3145,13 @@ module.exports = function (fileentry) {
 	});
 };
 
-},{"./removeFile":42}],42:[function(require,module,exports){
+},{"./removeFile":43}],43:[function(require,module,exports){
 module.exports = function (fileentry) {
     return new Promise(function (resolve, reject) {
         fileentry.remove(resolve, reject)
     });
 };
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 module.exports = function (filewriter, contents) {
   return new Promise(function (resolve, reject) {
     filewriter.onwriteend = resolve;
@@ -3123,7 +3161,7 @@ module.exports = function (filewriter, contents) {
 };
 
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 /*global require, module, $*/
 var notify = require('./notify')
 	, config = require('../app/config');
@@ -3162,7 +3200,7 @@ module.exports = {
 	, offlineCallback: offlineCallback
 	, get: get
 };
-},{"../app/config":8,"./notify":47}],45:[function(require,module,exports){
+},{"../app/config":8,"./notify":48}],46:[function(require,module,exports){
 
 function getLocalDate (options) {
     var year = options.year;
@@ -3313,11 +3351,11 @@ function standardHour (time, ampm) {
     }
     return void 0;
 }
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 module.exports = function (reason) {
 	console.log(reason);
 };
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 var config = require('../app/config')
 	, toLocal = require('../app/ui/getLocalizedString')
 	, localStrings = require('../app/ui/localizedStrings');
@@ -3350,4 +3388,4 @@ module.exports = {
 	y: y,
 	n: n
 };
-},{"../app/config":8,"../app/ui/getLocalizedString":16,"../app/ui/localizedStrings":19}]},{},[27]);
+},{"../app/config":8,"../app/ui/getLocalizedString":16,"../app/ui/localizedStrings":19}]},{},[28]);
