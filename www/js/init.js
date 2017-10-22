@@ -8,6 +8,7 @@ module.exports = (function () {
 		, storyList = require('./app/ui/storyList')
 		, notify = require('./util/notify')
 		, header = require('./app/ui/header')
+		, storyFooter = require('./app/ui/storyFooter')
 		, doesFileExist = require('./io/doesFileExist')
 		, getFileContents = require('./io/getFileContents')
 		, downloadMissingImage = require('./app/downloadMissingImage')
