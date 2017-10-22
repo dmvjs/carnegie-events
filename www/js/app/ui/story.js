@@ -6,9 +6,7 @@ var config = require('../config')
 	, access = require('../access')
 	, notify = require('../../util/notify')
     , date = require("../../util/date")
-	, share = ['ios', 'android', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
-	, browser = ['ios', 'android', 'blackberry 10', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
-	, $story = $('section.story')
+ 	, browser = ['ios', 'android', 'blackberry 10', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
 	, feedObj
 	, index;
 
@@ -205,6 +203,7 @@ function createPage(storyObj) {
       /*if (!specialImage) {
           page.append(topBar)
       }*/
+      $('footer.story-footer a.twitter').toggle(storyObj.twitterID !== undefined);
 
       page.append([topBar, storyTop, storySummaryContainer, storyText]);
 
@@ -513,5 +512,6 @@ module.exports = {
     show: show,
     next: next,
     previous: previous,
-    hide: hideTextResize
+    hide: hideTextResize,
+    getCurrentPageData: getCurrentPageData
 };
