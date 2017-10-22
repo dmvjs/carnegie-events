@@ -22,7 +22,7 @@
 #import <Cordova/CDVScreenOrientationDelegate.h>
 #import "CDVViewController+SplashScreen.h"
 
-#define kSplashScreenDurationDefault 0.25f
+#define kSplashScreenDurationDefault 3000.0f
 
 
 @implementation CDVSplashScreen
@@ -69,21 +69,36 @@
      *     gray       = UIActivityIndicatorViewStyleGray
      *
      */
+
+    // Determine whether rotation should be enabled for this device
+    // Per iOS HIG, landscape is only supported on iPad and iPhone 6+
+    CDV_iOSDevice device = [self getCurrentDevice];
+    BOOL autorotateValue = (device.iPad || device.iPhone6Plus) ?
+        [(CDVViewController *)self.viewController shouldAutorotateDefaultValue] :
+        NO;
     
-    UIActivityIndicatorViewStyle topActivityIndicatorStyle = UIActivityIndicatorViewStyleWhiteLarge;
-    UIInterfaceOrientation currentOrientation = self.viewController.interfaceOrientation;
-    
+    [(CDVViewController *)self.viewController setEnabledAutorotation:autorotateValue];
+
+    NSString* topActivityIndicator = [self.commandDelegate.settings objectForKey:[@"TopActivityIndicator" lowercaseString]];
+    UIActivityIndicatorViewStyle topActivityIndicatorStyle = UIActivityIndicatorViewStyleGray;
+
+    if ([topActivityIndicator isEqualToString:@"whiteLarge"])
+    {
+        topActivityIndicatorStyle = UIActivityIndicatorViewStyleWhiteLarge;
+    }
+    else if ([topActivityIndicator isEqualToString:@"white"])
+    {
+        topActivityIndicatorStyle = UIActivityIndicatorViewStyleWhite;
+    }
+    else if ([topActivityIndicator isEqualToString:@"gray"])
+    {
+        topActivityIndicatorStyle = UIActivityIndicatorViewStyleGray;
+    }
+
     UIView* parentView = self.viewController.view;
     parentView.userInteractionEnabled = NO;  // disable user interaction while splashscreen is shown
     _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:topActivityIndicatorStyle];
-    _activityView.center = (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) ?
-    //iPhone portrait orientation
-    CGPointMake(parentView.bounds.size.width / 2, (parentView.bounds.size.height / 10) * 7) :
-    ((currentOrientation == UIInterfaceOrientationLandscapeLeft) || (currentOrientation == UIInterfaceOrientationLandscapeRight)) ?
-    //iPad Landscape orientation
-    CGPointMake(parentView.bounds.size.width / 2, (parentView.bounds.size.height / 10) * 7.5) :
-    //iPad portrait
-    CGPointMake(parentView.bounds.size.width / 2, (parentView.bounds.size.height / 10) * 7.25);
+    _activityView.center = CGPointMake(parentView.bounds.size.width / 2, parentView.bounds.size.height / 2);
     _activityView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin
         | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     [_activityView startAnimating];
