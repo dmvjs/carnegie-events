@@ -1519,7 +1519,7 @@ section.story .story-text .relatedList li {
 }
 
 footer.story-footer {
-    z-index: 1002;
+    z-index: 9;
     height: 44px;
     background-color: #f9f9f9;
     width: 100%;
@@ -1551,11 +1551,33 @@ footer.story-footer .story-add-to-schedule {
     background-image: url('../img/checkbox-checked-brown.svg');
     background-size: 36px;
     background-position: 0 50%;
-    text-indent: 36px;
+    text-indent: 30px;
     display: inline-block;
     margin: 0;
+    font-size: 14px;
+    float: left;
 }
 
+footer.story-footer .twitter {
+    display: inline-block;
+    background-image: url('../img/choice-twitter.svg');
+    float: right;
+    width: 44px;
+    height: 44px;
+}
+section.twitter {
+    top: 44px;
+    left: 0;
+    right: 0;
+    bottom: 44px;
+    background-color: white;
+    z-index: 11;
+    position: absolute;
+}
+
+section.twitter.active {
+    display: block;
+}
 footer.story-footer .story-add-to-schedule.active {
     background-image: url('../img/checkbox-checked-blue.svg');
 }
