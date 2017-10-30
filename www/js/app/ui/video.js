@@ -2,7 +2,7 @@ var youtube = YoutubeVideoPlayer;
 
 function getVideoItems () {
     $.ajax({
-        url: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=PL19Wqzt3FqEWTAkQ0l_1GksHA4A5oOhvm&key=AIzaSyB7NdoiNVNmdji2qgGLdiyu36keDBRgMyI&maxResults=25',
+        url: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=PL6YCxo9_b_mqFjpENxcKPpwv4x6o1-EOV&key=AIzaSyB7NdoiNVNmdji2qgGLdiyu36keDBRgMyI&maxResults=25',
         success:function(e){
             console.log(e);
             updateVideoList(e);
