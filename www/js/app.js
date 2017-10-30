@@ -1168,6 +1168,7 @@ $(document)
 		e.stopPropagation();
 		e.stopImmediatePropagation();
 		$('section.twitter').removeClass('active');
+		$('section.survey').removeClass('active');
 		showStoryList();
 		$(e.currentTarget).removeClass('active');
 		return false;
@@ -2035,6 +2036,9 @@ function show(i, feed) {
 
       createPreviousAndNext();
 
+    $('footer.story-footer a.twitter').toggle(!!getCurrentPageData().twitterID);
+    $('footer.story-footer a.survey').toggle(!!getCurrentPageData().survey);
+
       setTimeout(function () {
           resolve(200)
           $('footer.story-footer .story-add-to-schedule').toggleClass('active', localSchedule.has(getCurrentPageData().eventID));
@@ -2146,7 +2150,6 @@ function createPage(storyObj) {
       /*if (!specialImage) {
           page.append(topBar)
       }*/
-      $('footer.story-footer a.twitter').toggle(storyObj.twitterID !== undefined);
 
       page.append([topBar, storyTop, storySummaryContainer, storyText]);
 
@@ -2462,6 +2465,7 @@ module.exports = {
 var story = require('./story');
 
 $('footer.story-footer .twitter').on('click', function () {
+    $('#survey-container').removeClass('active');
     $('#twitter-container').empty();
     var data = story.getCurrentPageData();
     if (data !== undefined && data.twitterID !== undefined) {
@@ -2472,28 +2476,52 @@ $('footer.story-footer .twitter').on('click', function () {
             },
             document.getElementById('twitter-container')
         );
-        $('section.twitter').toggleClass('active')
+        $('section.twitter').toggleClass('active');
+        var closeButton = $('<div/>', {
+            addClass: 'close-iframe',
+            text: '✕'
+        }).on('click', function () {
+            closeTwitterAndSurvey();
+        });
+        $('#twitter-container').prepend(closeButton);
     }
 });
 
-function showTwitterInFooter () {
-    $(data.twitterID).show()
-}
-
-function showTwitterInFooterWithLogic () {
+$('footer.story-footer .survey').on('click', function () {
+    $('#twitter-container').removeClass('active');
+    var sc = $('#survey-container');
+    sc.empty();
     var data = story.getCurrentPageData();
-    $(data.twitterID).toggle((data !== undefined && data.twitterID !== undefined))
+    if (!!data.survey) {
+        var iframe = document.createElement('iframe');
+        iframe.scrolling = 'no';
+        iframe.width = '100%';
+        iframe.height = '' + $(document).height() - (88 + 44 + 20 + 44) + 'px';
+        iframe.src = data.survey;
+        sc.eq(0).append(iframe);
+        $('section.survey').toggleClass('active');
+        var closeButton = $('<div/>', {
+            addClass: 'close-iframe',
+            text: '✕'
+        }).on('click', function () {
+            closeTwitterAndSurvey();
+        }).hide();
+        setTimeout(function () {
+            $('#survey-container').prepend(closeButton);
+            closeButton.fadeIn();
+        }, 200);
+    }
+});
+
+function closeTwitterAndSurvey () {
+    $('section.survey').removeClass('active');
+    $('section.twitter').removeClass('active');
 }
 
-function hideTwitterInFooter () {
-    $(data.twitterID).hide();
-}
+$('footer.story-footer .close-iframe').on('click', function () {
 
-module.exports = {
-    showTwitterInFooter: showTwitterInFooter,
-    hideTwitterInFooter: hideTwitterInFooter,
-    showTwitterInFooterWithLogic: showTwitterInFooterWithLogic
-};
+});
+
 },{"./story":23}],25:[function(require,module,exports){
 /*global require, module, $*/
 var config = require('../config')
@@ -2593,12 +2621,14 @@ function show(feedObj, forceActive) {
             .append(!!element.regLink ? ticketButton : null)
             .append(!!element.livestream && element.liveStream !== "False" ? videoButton : null)
             .append(element.twitterID !== undefined ? twitterButton : null)
-            .append(!!element["poll "] ? contactButton : null)
+            .append(!!element.survey ? contactButton : null)
             .append(!!element.resourceList ? fileButton : null)
                 , storyItem = $('<div/>', {
                 addClass: 'story-item'
             }).append([storyEventID, hairline, storyImage, storyText, choiceBar])
                 , li = $('<li/>', {}).append(storyItem);
+
+
 
             ul.append(li);
 
@@ -2619,11 +2649,11 @@ function show(feedObj, forceActive) {
         var myScheduleButton = $('<div/>', {
             addClass: 'my-schedule-button',
             text: 'My Schedule'
-        }).toggleClass('active', localMenuView.isMySchedule()).on('click', footerButtonClicked)
+        }).on('click', footerButtonClicked)
             , allEventsButton = $('<div/>', {
             addClass: 'all-events-button',
             text: 'All Events'
-        }).toggleClass('active', !localMenuView.isMySchedule()).on('click', footerButtonClicked)
+        }).addClass('active').on('click', footerButtonClicked)
             , myButtonContainer = $('<div/>', {
             addClass: 'footer-button-container'
         }).append(myScheduleButton).append(allEventsButton);
@@ -2689,9 +2719,6 @@ function show(feedObj, forceActive) {
 
         setTimeout(function () {
             loading.hide();
-            if (localMenuView.isMySchedule()) {
-                myScheduleButton.click()
-            }
         }, 100);
 
         $('.container section.story-list').fadeIn()
@@ -2711,7 +2738,7 @@ var youtube = YoutubeVideoPlayer;
 
 function getVideoItems () {
     $.ajax({
-        url: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=PL19Wqzt3FqEWTAkQ0l_1GksHA4A5oOhvm&key=AIzaSyB7NdoiNVNmdji2qgGLdiyu36keDBRgMyI&maxResults=25',
+        url: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=PL6YCxo9_b_mqFjpENxcKPpwv4x6o1-EOV&key=AIzaSyB7NdoiNVNmdji2qgGLdiyu36keDBRgMyI&maxResults=25',
         success:function(e){
             console.log(e);
             updateVideoList(e);
@@ -2722,6 +2749,8 @@ function getVideoItems () {
         }
     });
 }
+
+https://www.youtube.com/embed/videoseries?list=PL6YCxo9_b_mqFjpENxcKPpwv4x6o1-EOV
 
 function getBestImage (thumbnails)  {
     if (thumbnails.standard) {
