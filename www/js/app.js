@@ -1689,7 +1689,7 @@ module.exports = {
 
 $('#profile-submit-button').on('click', function (e) {
 	e.preventDefault();
-	$('.menu a.show-menu').trigger('touchstart').trigger('touchend');
+	$('.menu a.show-menu').trigger('click');
 	// check items for validation
 	// submit only if ok
 });
@@ -2151,22 +2151,18 @@ function createPage(storyObj) {
           page.append(topBar)
       }*/
 
-      page.append([topBar, storyTop, storySummaryContainer, storyText]);
-
-    storyImage.on('error', function (e) {
-      $(this).prop('src', config.missingImage);
-    });
+      page.append([topBar, storyTop, storySummaryContainer]);
 
       if ((storyObj.regLink !== undefined) && (storyObj.regLink !== "") && (storyObj.regLink !== null)) {
           var isRegistered = storyObj.eventID && localRegister.has('' + storyObj.eventID);
           var registrationLink = $('<a/>', {
-              addClass: "has-ticket",
+              addClass: isRegistered ? "has-ticket is-registered" : 'has-ticket',
               text: isRegistered ? "Registered" : "Register Now"
           });
 
           var cancelLink = $('<a/>', {
               addClass: "cancel-registration",
-              text: "Cancel Registration",
+              text: "Cancel",
               href: '#'
           });
 
@@ -2182,7 +2178,7 @@ function createPage(storyObj) {
               addClass: 'registration-container'
           });
 
-          registrationContainer.append(registrationLink, calendarLink, cancelLink);
+          registrationContainer.append(registrationLink, cancelLink, calendarLink);
 
           if (!isRegistered) {
               registrationLink.on('click', submitForm);
@@ -2203,6 +2199,12 @@ function createPage(storyObj) {
 
           page.append(registrationContainer);
       }
+
+      page.append([storyText]);
+
+    storyImage.on('error', function (e) {
+      $(this).prop('src', config.missingImage);
+    });
 
     setTimeout(function () {
       resolve(page)
@@ -2628,8 +2630,6 @@ function show(feedObj, forceActive) {
             }).append([storyEventID, hairline, storyImage, storyText, choiceBar])
                 , li = $('<li/>', {}).append(storyItem);
 
-
-
             ul.append(li);
 
             $(checkButton).on('click', function (e) {
@@ -2719,6 +2719,9 @@ function show(feedObj, forceActive) {
 
         setTimeout(function () {
             loading.hide();
+            if (localMenuView.isMySchedule()) {
+                myScheduleButton.click()
+            }
         }, 100);
 
         $('.container section.story-list').fadeIn()
@@ -2749,8 +2752,6 @@ function getVideoItems () {
         }
     });
 }
-
-https://www.youtube.com/embed/videoseries?list=PL6YCxo9_b_mqFjpENxcKPpwv4x6o1-EOV
 
 function getBestImage (thumbnails)  {
     if (thumbnails.standard) {
