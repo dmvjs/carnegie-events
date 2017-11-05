@@ -64,6 +64,7 @@ $(document)
 		e.stopPropagation();
 		e.stopImmediatePropagation();
 		$('section.twitter').removeClass('active');
+		$('section.survey').removeClass('active');
 		showStoryList();
 		$(e.currentTarget).removeClass('active');
 		return false;
