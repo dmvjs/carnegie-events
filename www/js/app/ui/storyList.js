@@ -124,9 +124,9 @@ function show(feedObj, forceActive) {
             text: 'My Schedule'
         }).on('click', footerButtonClicked)
             , allEventsButton = $('<div/>', {
-            addClass: 'all-events-button',
+            addClass: 'all-events-button active',
             text: 'All Events'
-        }).addClass('active').on('click', footerButtonClicked)
+        }).on('click', footerButtonClicked)
             , myButtonContainer = $('<div/>', {
             addClass: 'footer-button-container'
         }).append(myScheduleButton).append(allEventsButton);
@@ -192,9 +192,9 @@ function show(feedObj, forceActive) {
 
         setTimeout(function () {
             loading.hide();
-            if (localMenuView.isMySchedule()) {
+            /*if (localMenuView.isMySchedule()) {
                 myScheduleButton.click()
-            }
+            }*/
         }, 100);
 
         $('.container section.story-list').fadeIn()
