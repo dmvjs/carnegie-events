@@ -590,7 +590,7 @@ section.story-list .story-item .video-button {
     background-image: url('../img/choice-video.svg');
 }
 section.story-list .story-item .contact-button {
-    background-image: url('../img/contact.svg');
+    background-image: url('../img/choice-contact.svg');
 }
 section.story-list .story-item .twitter-button {
     background-image: url('../img/choice-twitter.svg');
@@ -1093,17 +1093,56 @@ section.story.active {
 section.story .cancel-registration,
 section.story .add-to-calendar,
 section.story .has-ticket {
-    display: block;
-    height: 44px;
-    line-height: 44px;
+    display: inline-block;
+    float: left;
+    width: 15%;
+    height: 36px;
+    line-height: 36px;
     font-size: 16px;
-    color: #749d8e;
+    color: #318cff;
     border-radius: 3px;
     border: solid 1px #749d8e;
     text-decoration: none;
     text-align: center;
-    margin: 2px;
+    overflow: hidden;
 }
+
+section.story .cancel-registration {
+    font-size: 0.625em;
+    border: none;
+    margin: 0;
+    line-height: 38px;
+}
+
+section.story .has-ticket {
+    width: 39%;
+    border: none;
+    background-image: url('../img/choice-ticket-gold.svg');
+    background-repeat: no-repeat;
+    background-position: 0;
+    text-indent: 36px;
+    font-size: 0.75em;
+}
+
+section.story .has-ticket.is-registered {
+    color: #d68419;
+    font-size: 0.75em
+}
+
+section.story .add-to-calendar {
+    background-color: #318cff;
+    color: white;
+    background-image: url('../img/calendar-bg.png');
+    background-repeat: no-repeat;
+    background-size: 26px;
+    background-position: 0;
+    text-indent: 20px;
+    width: 42%;
+    font-size: 0.75em;
+    float: right;
+}
+
+
 
 section.story.full-height {
     bottom: 0;
@@ -1220,10 +1259,29 @@ section.story .story-summary {
 }
 
 section.story .story-speaker-list-featuring {
-    margin-top: 8px;
+    margin: 8px 0;
     text-transform: uppercase;
     font-size: 0.675em;
 }
+
+section.story .story-speakers > ul {
+    overflow: auto;
+}
+
+section.story .story-speakers > ul > li {
+    display: inline-block;
+    float: left;
+    padding-right: 10px;
+    line-height: 1.375;
+    background-color: #e4e3dd;
+    border-radius: 2px;
+}
+
+section.story .registration-container {
+    overflow: auto;
+    margin-bottom: 8px;
+}
+
 
 section.story .story-summary-container {
     display: block;
@@ -1437,10 +1495,16 @@ section.story .story-text .jumpLink.infographic {
 }
 
 section.story .story-text h3 {
-    font: normal 1em "Helvetica Neue", Helvetica, Arial, sans-serif;
+     font: normal 1em "Helvetica Neue", Helvetica, Arial, sans-serif;
+     margin: 8px 0 4px;
+     color: #91907b;
+     text-transform: uppercase;
+ }
+
+section.story .story-text h6 {
+    font: normal .875em "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
     margin: 8px 0 4px;
-    color: #91907b;
-    text-transform: uppercase;
 }
 
 section.story .story-text .comments h4 {
@@ -1544,6 +1608,21 @@ footer.story-footer.active {
     transition-duration: 350ms;
 }
 
+section.survey .close-iframe ,
+section.twitter .close-iframe {
+    display: inline-block;
+    width: 44px;
+    height: 44px;
+    background-color: whitesmoke;
+    color: darkgrey;
+    content: 'x';
+    border-radius: 50% 50% 0 0;
+    float: right;
+    text-align: center;
+    line-height: 44px;
+    font-size: 2em;
+}
+
 footer.story-footer .story-add-to-schedule {
     line-height: 44px;
     padding: 0 10px 0 0;
@@ -1556,28 +1635,42 @@ footer.story-footer .story-add-to-schedule {
     margin: 0;
     font-size: 14px;
     float: left;
+    color: #318cff;
 }
 
-footer.story-footer .twitter {
+footer.story-footer .twitter,
+footer.story-footer .survey {
     display: inline-block;
-    background-image: url('../img/choice-twitter.svg');
+    background-repeat: no-repeat;
+    background-image: url('../img/choice-twitter-dark.svg');
     float: right;
     width: 44px;
     height: 44px;
+    background-position: 50%;
 }
-section.twitter {
+footer.story-footer .survey {
+    background-image: url('../img/choice-contact-dark.svg');
+}
+section.twitter,
+section.survey {
     top: 44px;
     left: 0;
     right: 0;
     bottom: 44px;
-    background-color: white;
+    background-color: transparent;
     z-index: 11;
     position: absolute;
 }
 
-section.twitter.active {
+#survey-container {
+    overflow: hidden;
+}
+
+section.twitter.active,
+section.survey.active {
     display: block;
 }
+
 footer.story-footer .story-add-to-schedule.active {
     background-image: url('../img/checkbox-checked-blue.svg');
 }
