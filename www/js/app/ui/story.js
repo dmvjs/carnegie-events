@@ -92,6 +92,9 @@ function show(i, feed) {
 
       createPreviousAndNext();
 
+    $('footer.story-footer a.twitter').toggle(!!getCurrentPageData().twitterID);
+    $('footer.story-footer a.survey').toggle(!!getCurrentPageData().survey);
+
       setTimeout(function () {
           resolve(200)
           $('footer.story-footer .story-add-to-schedule').toggleClass('active', localSchedule.has(getCurrentPageData().eventID));
@@ -203,24 +206,19 @@ function createPage(storyObj) {
       /*if (!specialImage) {
           page.append(topBar)
       }*/
-      $('footer.story-footer a.twitter').toggle(storyObj.twitterID !== undefined);
 
-      page.append([topBar, storyTop, storySummaryContainer, storyText]);
-
-    storyImage.on('error', function (e) {
-      $(this).prop('src', config.missingImage);
-    });
+      page.append([topBar, storyTop, storySummaryContainer]);
 
       if ((storyObj.regLink !== undefined) && (storyObj.regLink !== "") && (storyObj.regLink !== null)) {
           var isRegistered = storyObj.eventID && localRegister.has('' + storyObj.eventID);
           var registrationLink = $('<a/>', {
-              addClass: "has-ticket",
+              addClass: isRegistered ? "has-ticket is-registered" : 'has-ticket',
               text: isRegistered ? "Registered" : "Register Now"
           });
 
           var cancelLink = $('<a/>', {
               addClass: "cancel-registration",
-              text: "Cancel Registration",
+              text: "Cancel",
               href: '#'
           });
 
@@ -236,7 +234,7 @@ function createPage(storyObj) {
               addClass: 'registration-container'
           });
 
-          registrationContainer.append(registrationLink, calendarLink, cancelLink);
+          registrationContainer.append(registrationLink, cancelLink, calendarLink);
 
           if (!isRegistered) {
               registrationLink.on('click', submitForm);
@@ -257,6 +255,12 @@ function createPage(storyObj) {
 
           page.append(registrationContainer);
       }
+
+      page.append([storyText]);
+
+    storyImage.on('error', function (e) {
+      $(this).prop('src', config.missingImage);
+    });
 
     setTimeout(function () {
       resolve(page)
