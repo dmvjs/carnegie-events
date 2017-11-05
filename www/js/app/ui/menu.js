@@ -105,7 +105,7 @@ module.exports = {
 
 $('#profile-submit-button').on('click', function (e) {
 	e.preventDefault();
-	$('.menu a.show-menu').trigger('touchstart').trigger('touchend');
+	$('.story-list a.show-menu').trigger('touchstart').trigger('touchend');
 	// check items for validation
 	// submit only if ok
 });
