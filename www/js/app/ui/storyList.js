@@ -96,7 +96,7 @@ function show(feedObj, forceActive) {
             .append(!!element.regLink ? ticketButton : null)
             .append(!!element.livestream && element.liveStream !== "False" ? videoButton : null)
             .append(element.twitterID !== undefined ? twitterButton : null)
-            .append(!!element["poll "] ? contactButton : null)
+            .append(!!element.survey ? contactButton : null)
             .append(!!element.resourceList ? fileButton : null)
                 , storyItem = $('<div/>', {
                 addClass: 'story-item'
@@ -122,11 +122,11 @@ function show(feedObj, forceActive) {
         var myScheduleButton = $('<div/>', {
             addClass: 'my-schedule-button',
             text: 'My Schedule'
-        }).toggleClass('active', localMenuView.isMySchedule()).on('click', footerButtonClicked)
+        }).on('click', footerButtonClicked)
             , allEventsButton = $('<div/>', {
             addClass: 'all-events-button',
             text: 'All Events'
-        }).toggleClass('active', !localMenuView.isMySchedule()).on('click', footerButtonClicked)
+        }).addClass('active').on('click', footerButtonClicked)
             , myButtonContainer = $('<div/>', {
             addClass: 'footer-button-container'
         }).append(myScheduleButton).append(allEventsButton);
