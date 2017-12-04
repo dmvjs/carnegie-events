@@ -133,8 +133,16 @@ function show(feedObj, forceActive) {
         var footerBox = $('<div/>', {
             addClass: 'footer-box'
         }).append(myButtonContainer);
-        $('.container').append(footerBox);
-        
+
+        var footerContainer = $('.container');
+        var footerBoxes = footerContainer.find('.footer-box');
+        var hasFooters = footerBoxes.length > 0;
+        if (hasFooters) {
+            footerContainer.find('.footer-box').eq(0).replaceWith(footerBox);
+        } else {
+            footerContainer.append(footerBox);
+        }
+
         function footerButtonClicked () {
             var scheduleButton = $('.my-schedule-button');
             var eventsButton = $('.all-events-button');

@@ -241,17 +241,26 @@ function createPage(storyObj) {
               cancelLink.hide();
           }
           calendarLink.on('click', isAddedToCalendar ? justOpenCalendar : openCalendarLink);
-          cancelLink.on('click', function () {
-              $.ajax({
-                  url: storyObj.cancelRegLink,
-                  success: function (e) {
-                      cancelRegistration();
-                  },
-                  error: function (e) {
+
+          if (typeof window.localStorage.LocalProfileSetting === 'string') {
+              var json = JSON.parse(localStorage.LocalProfileSetting);
+              cancelLink.on('click', function () {
+                  if (storyObj && storyObj.cancelRegLink &&
+                      json && json.email) {
+                      $.ajax({
+                          url: storyObj.cancelRegLink + json.email,
+                          success: function (e) {
+                              cancelRegistration();
+                          },
+                          error: function (e) {
+                              notify.alert('An error occurred while registering from this event.')
+                          }
+                      });
+                  } else {
                       notify.alert('An error occurred while registering from this event.')
                   }
               });
-          });
+          }
 
           page.append(registrationContainer);
       }
@@ -295,8 +304,10 @@ function getCurrentPageData () {
 
 function getCalendarData () {
     var data = getCurrentPageData();
-    if (data !== undefined) {
+    if (data !== undefined && data.calendarLink !== undefined) {
         return data.calendarLink;
+    } else {
+        console.log('no calendar data available')
     }
     return void 0;
 }
@@ -306,8 +317,13 @@ function justOpenCalendar () {
     if (calendarData !== undefined) {
         var startDate = calendarData.startDate !== undefined && new Date(calendarData.startDate);
         var endDate = calendarData.endDate !== undefined && new Date(calendarData.endDate);
-        if (startDate !== undefined && endDate !== undefined) {
+        if (startDate !== undefined &&
+            startDate === startDate && //nan check
+            endDate !== undefined &&
+            endDate === endDate) { //nan check) {
             window.plugins.calendar.openCalendar(startDate);
+        } else {
+            console.log('no start or end date available')
         }
     }
     return false;
@@ -319,11 +335,14 @@ function openCalendarLink () {
     if (calendarData !== undefined) {
         var startDate = calendarData.startDate !== undefined && new Date(calendarData.startDate);
         var endDate = calendarData.endDate !== undefined && new Date(calendarData.endDate);
-        if (startDate !== undefined && endDate !== undefined) {
+        if (startDate !== undefined &&
+            startDate === startDate && //nan check
+            endDate !== undefined &&
+            endDate === endDate) { //nan check
             window.plugins.calendar.createEventWithOptions(
                 data.title,
                 data.location || '',
-                "no",
+                data.summary || '',
                 startDate,
                 endDate,
                 {},
@@ -340,6 +359,8 @@ function openCalendarLink () {
                     console.log(e)
                 }
             );
+        } else {
+            console.log('could not create event')
         }
     }
     //title, location, notes, startDate, endDate, options, successCallback, errorCallback

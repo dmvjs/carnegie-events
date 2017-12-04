@@ -19,7 +19,7 @@
           "directUrl": "https://raw.githubusercontent.com/JonSmart/CordovaYoutubeVideoPlayer/master/package.json"
         }
       },
-      "/Users/kirk/Apps/carnegie-events/events/node_modules"
+      "/Users/kirk/Apps/carnegie-events"
     ]
   ],
   "_from": "git+https://github.com/JonSmart/CordovaYoutubeVideoPlayer.git",
@@ -50,10 +50,10 @@
     "/"
   ],
   "_resolved": "git+https://github.com/JonSmart/CordovaYoutubeVideoPlayer.git#819fac1231022c05925b0f5391ec565e6a0f9907",
-  "_shasum": "49d5fbc75619f614757491293b0e5c5ec63b0208",
+  "_shasum": "868a4a4966a84a4801b82b201d115fd0b57ca0d6",
   "_shrinkwrap": null,
   "_spec": "https://github.com/JonSmart/CordovaYoutubeVideoPlayer",
-  "_where": "/Users/kirk/Apps/carnegie-events/events/node_modules",
+  "_where": "/Users/kirk/Apps/carnegie-events",
   "cordova": {
     "id": "com.bunkerpalace.cordova.YoutubeVideoPlayer",
     "platforms": [

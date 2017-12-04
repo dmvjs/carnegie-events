@@ -114,7 +114,7 @@ section.tv .tv-container {
 /* header styles */
 
 header {
-    z-index: 2147483647 !important;
+    z-index: 2147483600 !important;
     height: 44px;
     background-color: #749d8e;
     background-image: none;
@@ -127,7 +127,7 @@ header {
 }
 
 .tablet header {
-    height: 86px;
+    height: 66px;
 }
 
 .android.tablet header {
@@ -481,6 +481,10 @@ header .story .btn-group .next {
     bottom: 33px;
 }
 
+.tablet .container section.story-list {
+    bottom: 66px;
+}
+
 #story-list-new {
     position: absolute;
     right: 0;
@@ -705,11 +709,19 @@ section.story-list li .story-image {
     right: 0;
 }
 
+.tablet .footer-box {
+    height: 66px;
+}
+
 .footer-box .footer-button-container {
     width: calc(100% - 8px);
     height: 24px;
     font-size: 12px;
     padding: 4px
+}
+
+.tablet .footer-box .footer-button-container {
+    font-size: 16px;
 }
 
 .footer-box .footer-button-container .my-schedule-button,
@@ -725,6 +737,12 @@ section.story-list li .story-image {
     text-align: center;
 }
 
+.tablet .footer-box .footer-button-container .my-schedule-button,
+.tablet .footer-box .footer-button-container .all-events-button {
+    height: 44px;
+    line-height: 44px;
+}
+
 .footer-box .footer-button-container .my-schedule-button:before {
     background-image: url("../img/checkbox-checked-brown.svg");
     background-repeat: no-repeat;
@@ -735,6 +753,14 @@ section.story-list li .story-image {
     width: 24px;
     position: absolute;
     margin-left: -27px;
+}
+
+.tablet .footer-box .footer-button-container .my-schedule-button:before {
+    background-size: 44px;
+    background-position-y: 0;
+    height: 44px;
+    width: 44px;
+    margin-left: -36px;
 }
 
 .arabic-ui .footer-box .footer-button-container .my-schedule-button,
@@ -869,14 +895,19 @@ section.menu, section.tv {
 section.menu.active, section.tv.active {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
+    overflow: hidden;
+    padding-top: 24px;
+}
+
+.tablet section.menu.active, .tablet section.tv.active {
+    padding-top: 0;
 }
 
 .tablet section.menu {
-    top: 0;
     left: 100%;
     display: block;
     width: 320px;
-    z-index: 2;
+    z-index: 10;
     -webkit-box-shadow: none;
     box-shadow: none;
     -webkit-transform: translate3d(0, 0, 0);
@@ -1608,19 +1639,34 @@ footer.story-footer.active {
     transition-duration: 350ms;
 }
 
-section.survey .close-iframe ,
-section.twitter .close-iframe {
-    display: inline-block;
+.close-iframe {
+    display: block;
+    position: fixed;
+    top: 100px;
+    right: 10px;
     width: 44px;
     height: 44px;
     background-color: whitesmoke;
     color: darkgrey;
     content: 'x';
-    border-radius: 50% 50% 0 0;
+    border-radius: 50%;
     float: right;
     text-align: center;
     line-height: 44px;
     font-size: 2em;
+    z-index: 99999999;
+}
+
+.android .close-iframe {
+    top: 80px;
+}
+
+.tablet .close-iframe {
+    top: 120px;
+}
+
+.android.tablet .close-iframe {
+    top: 100px;
 }
 
 footer.story-footer .story-add-to-schedule {
@@ -1638,6 +1684,37 @@ footer.story-footer .story-add-to-schedule {
     color: #318cff;
 }
 
+#story-cover{
+    z-index: 4;
+    position: absolute;
+    background-color: transparent;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right:0;
+}
+
+.tweet-header {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 110px;
+    right: 0;
+    border-radius: 8px 8px 0 0;
+    height: 44px;
+    line-height: 44px;
+    background-color: white;
+    color: black;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    font-size: 20px;
+    z-index: 20 !important;
+    padding-left: 12px;
+    border-bottom: 1px solid #749d8e;
+}
+
 footer.story-footer .twitter,
 footer.story-footer .survey {
     display: inline-block;
@@ -1651,19 +1728,31 @@ footer.story-footer .survey {
 footer.story-footer .survey {
     background-image: url('../img/choice-contact-dark.svg');
 }
+
+.twitter-container iframe {
+    border-top: 1px solid #666;
+}
+
 section.twitter,
 section.survey {
     top: 44px;
     left: 0;
     right: 0;
-    bottom: 44px;
-    background-color: transparent;
-    z-index: 11;
+    bottom: 0;
+    background-color: white;
+    z-index: 2147483610 !important;
     position: absolute;
+    overflow: hidden;
 }
 
-#survey-container {
-    overflow: hidden;
+section.twitter {
+    top: 88px;
+}
+
+.tablet section.twitter {
+    top: initial;
+    left: initial;
+    width: 520px;
 }
 
 section.twitter.active,

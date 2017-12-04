@@ -1,74 +1,68 @@
 {
-    "prepare_queue": {
-        "installed": [],
-        "uninstalled": []
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "com.bunkerpalace.cordova.YoutubeVideoPlayer": {
+      "PACKAGE_NAME": "com.ceip.events"
     },
-    "config_munge": {
-        "files": {}
+    "cordova-plugin-calendar": {
+      "CALENDAR_USAGE_DESCRIPTION": "This app uses your calendar",
+      "PACKAGE_NAME": "com.ceip.events"
     },
-    "installed_plugins": {
-        "com.bunkerpalace.cordova.YoutubeVideoPlayer": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-calendar": {
-            "CALENDAR_USAGE_DESCRIPTION": "This app uses your calendar",
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-dialogs": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-globalization": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-google-analytics": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-headercolor": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-network-information": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-safariviewcontroller": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-screen-orientation": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-x-socialsharing": {
-            "PACKAGE_NAME": "com.ceip.events"
-        }
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "com.ceip.events"
     },
-    "dependent_plugins": {
-        "br.com.dtmtec.plugins.carrier": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "com.ceip.events"
-        },
-        "es6-promise-plugin": {
-            "PACKAGE_NAME": "com.ceip.events"
-        }
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-globalization": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-google-analytics": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-headercolor": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-safariviewcontroller": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-screen-orientation": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.ceip.events"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.ceip.events"
     }
+  },
+  "dependent_plugins": {
+    "br.com.dtmtec.plugins.carrier": {
+      "PACKAGE_NAME": "com.ceip.events"
+    }
+  }
 }

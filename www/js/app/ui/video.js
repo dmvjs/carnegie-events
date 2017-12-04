@@ -1,14 +1,13 @@
-var youtube = YoutubeVideoPlayer;
+var youtube = window.YoutubeVideoPlayer;
 
 function getVideoItems () {
     $.ajax({
         url: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=PL6YCxo9_b_mqFjpENxcKPpwv4x6o1-EOV&key=AIzaSyB7NdoiNVNmdji2qgGLdiyu36keDBRgMyI&maxResults=25',
         success:function(e){
-            console.log(e);
             updateVideoList(e);
         },
         error: function (e) {
-            debugger;
+            console.log(e);
             //TODO: show alert?
         }
     });
@@ -40,7 +39,7 @@ function createItemDOM (element) {
         addClass: 'video-list-item'
     }).append([imageZone, textZone]).on('click', function (e) {
         e.preventDefault();
-        youtube.openVideo(i.resourceId.videoId);
+        youtube.openVideo(i.resourceId.videoId, function (){});
     });
 }
 
