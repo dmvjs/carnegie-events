@@ -151,6 +151,11 @@ function createPreviousAndNext() {
 function createPage(storyObj) {
     //console.log(storyObj);
   return new Promise(function (resolve, reject) {
+      var videoEmbedHTML = storyObj.videoEmbed;
+      if (videoEmbedHTML) {
+          videoEmbedHTML = videoEmbedHTML.replace(/width="560"/, 'sandbox="allow-presentation allow-forms allow-scripts allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-orientation-lock" width="' + $(document).width() + '"');
+          videoEmbedHTML = videoEmbedHTML.replace(/height="315"/, 'height="' + (($(document).width() / 16) * 9) + '"');
+      }
       var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
       , image = storyObj.image ? path + storyObj.image.split('/').pop() : config.missingImage
@@ -172,18 +177,12 @@ function createPage(storyObj) {
       , storySpecialImageContainer = specialImage ? $('<div/>', {
         addClass: 'story-special-image-container'
       }).append(storySpecialImage) : null
-      , storyAuthor = $('<div/>', {
-        addClass: 'story-author', text: storyObj.author || ''
-      })
-      , storyDate = $('<div/>', {
-        addClass: 'story-date', text: date.getStoryDate(storyObj, feedConfig.language)
-      })
       , storyMeta = $('<div/>', {
         addClass: 'story-meta'
-      }).append(storyTitle).append(storyAuthor).append(storyDate)
+      }).append(storyTitle)
       , storyTop = $('<div/>', {
         addClass: 'story-top'
-      }).append(storyImage).append(storySpecialImageContainer).append(storyMeta)
+      }).append(storyObj.videoEmbed ? videoEmbedHTML : storyImage).append(storySpecialImageContainer).append(storyMeta)
        , storySummary = $('<div/>', {
         addClass: 'story-summary',
         text: storyObj.summary
