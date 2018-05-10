@@ -81,7 +81,7 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-    background-color: #749d8e;
+    background-color: #092e55;
 }
 
 body.arabic-ui {
@@ -116,7 +116,7 @@ section.tv .tv-container {
 header {
     z-index: 2147483600 !important;
     height: 44px;
-    background-color: #749d8e;
+    background-color: #092e55;
     background-image: none;
     padding-top: 20px;
     position: relative;
@@ -147,7 +147,7 @@ header .story-list,
 header .menu,
 header .tv {
     height: 44px;
-    background: url('../img/header-story.png');
+    background: url('../img/cal-logo.png');
     background-size: auto 44px;
     background-repeat: no-repeat;
     background-position: center;
@@ -162,7 +162,7 @@ header .tv {
 
 header .story {
     height: 44px;
-    background: url('../img/header-story.png');
+    background: url('../img/cal-logo.png');
     background-size: auto 44px;
     background-repeat: no-repeat;
     background-position: center;
@@ -519,7 +519,7 @@ section.story .top-bar {
     text-transform: uppercase;
     font-size: 10px;
     padding: 6px 0;
-    background-color: #749d8e;
+    background-color: #092e55;
 }
 
 section.story-list li .story-item {
@@ -648,9 +648,11 @@ section.story-list .story-item .story-title {
     overflow: hidden;
     clear: both;
     color: white;
-    margin: 0 4px;
+    margin: 0;
     height: auto;
+    padding: 8px 4px;
     max-height: 2.2em;
+    background-color: black;
 }
 
 
@@ -672,7 +674,7 @@ section.story-list .story-item .story-author {
 section.story-list .story-item .story-location {
     color: white;
     margin: 6px 4px 2px;
-    font-size: 0.55em;
+    font-size: 0.625em;
     text-transform: uppercase;
 }
 
@@ -842,7 +844,7 @@ section.menu .menu-text-container p {
     bottom: 0;
     z-index: 9;
     padding: 10px;
-    background-color: #749d8e;
+    background-color: #092e55;
 }
 
 .tablet #player {
@@ -882,7 +884,7 @@ section.menu,
 section.tv {
     display: block;
     z-index: 10;
-    background-color: #749d8e;
+    background-color: #092e55;
 }
 
 section.menu, section.tv {
@@ -921,7 +923,7 @@ section.menu.active, section.tv.active {
 
 .android.legacy section.menu,
 .amazon-fireos section.menu {
-    border-left: 1px solid #749d8e;
+    border-left: 1px solid #092e55;
 }
 
 .tablet section.menu.active {
@@ -1132,7 +1134,7 @@ section.story .has-ticket {
     font-size: 16px;
     color: #318cff;
     border-radius: 3px;
-    border: solid 1px #749d8e;
+    border: solid 1px #092e55;
     text-decoration: none;
     text-align: center;
     overflow: hidden;
@@ -1262,7 +1264,7 @@ section.story-list .story-list-behind {
     height: calc(54.049587vw + 24px);
     width: 100%;
     position: absolute;
-    background-color: #749d8e;
+    background-color: #092e55;
 }
 .tablet section.story .story-behind,
 .tablet section.story-list .story-list-behind {
@@ -1310,14 +1312,14 @@ section.story .story-speakers > ul > li {
 
 section.story .registration-container {
     overflow: auto;
-    margin-bottom: 8px;
+    margin: 0 16px 8px
 }
 
 
 section.story .story-summary-container {
     display: block;
     background-color: #e4e3dd;
-    padding: 8px;
+    padding: 8px 16px;
     margin-bottom: 8px;
 }
 
@@ -1354,20 +1356,20 @@ section.story .story-meta {
 
 section.story .story-title {
     font-size: 1.5em;
-    margin: 0 8px 8px;
+    margin: 0 16px 8px;
     font-weight: bold;
     line-height: 1.1;
 }
 
 .tablet section.story .story-title {
-    margin: 0 30px 15px;
+    margin: 0 32px 15px;
 }
 
 section.story .story-meta .story-author,
 section.story .story-meta .story-date {
     font-size: .75em;
     text-transform: uppercase;
-    margin: 0 8px;
+    margin: 0 16px;
 }
 
 .tablet section.story .story-meta .story-author,
@@ -1382,7 +1384,7 @@ section.story .story-meta .story-author {
 
 section.story .story-text {
     font-family: Georgia, Times, serif;
-    margin: 0 8px;
+    margin: 0 16px;
     line-height: 1.4em;
     padding-bottom: 16px;
     font-size: 1.1em;
@@ -1468,7 +1470,7 @@ section.story .story-text dc {
 }
 
 section.story .story-text ul {
-    margin: 4px 8px 8px;
+    margin: 4px 16px 8px;
 }
 
 section.story .story-text .relatedList li {
@@ -1595,7 +1597,7 @@ section.story .story-text .comments .button a,
 section.story .story-text .bigButton a {
     font: normal 1.2em "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: white !important;
-    background-color: #749d8e;
+    background-color: #092e55;
     padding: .625em 0;
     margin: 1em auto;
     width: 11em;
@@ -1712,7 +1714,7 @@ footer.story-footer .story-add-to-schedule {
     font-size: 20px;
     z-index: 20 !important;
     padding-left: 12px;
-    border-bottom: 1px solid #749d8e;
+    border-bottom: 1px solid #092e55;
 }
 
 footer.story-footer .twitter,
@@ -1930,7 +1932,7 @@ footer.story-footer .spacer {
     left: 0;
     width: 100%;
     height: 490px;
-    background: #749d8e;
+    background: #092e55;
     /*box-shadow: 0 -5px 10px #bbb inset;*/
 }
 
