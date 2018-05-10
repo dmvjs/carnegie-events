@@ -59,14 +59,10 @@ function show(feedObj, forceActive) {
                 , text: element.title
             })  , storyLocation = $('<div/>', {
                 addClass: 'story-location'
-                , text: element.location
-            })  , storyDate = $('<div/>', {
-                addClass: 'story-date'
-                , text: date.getStoryDate(element, feedConfig.language)
-            })
-                , storyText = $('<div/>', {
+                , text: date.getStoryDate(element, feedConfig.language) + ' — ' + element.location
+            })  , storyText = $('<div/>', {
                 addClass: 'story-text'
-            }).append([storyLocation, storyTitle, storyDate])
+            }).append([storyLocation, storyTitle])
                 , storyImage = $('<img>', {
                 src: image
                 , addClass: 'story-image'
