@@ -92,7 +92,7 @@ function show(i, feed) {
 
       createPreviousAndNext();
 
-    $('footer.story-footer a.twitter').toggle(!!getCurrentPageData().twitterID);
+    $('footer.story-footer a.twitter').toggle(!!getCurrentPageData().twitterHashtag);
     $('footer.story-footer a.survey').toggle(!!getCurrentPageData().survey);
 
       setTimeout(function () {
@@ -153,14 +153,13 @@ function createPage(storyObj) {
   return new Promise(function (resolve, reject) {
       var videoEmbedHTML = storyObj.videoEmbed;
       if (videoEmbedHTML) {
-          videoEmbedHTML = videoEmbedHTML.replace(/width="560"/, 'sandbox="allow-presentation allow-forms allow-scripts allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-orientation-lock" width="' + $(document).width() + '"');
-          videoEmbedHTML = videoEmbedHTML.replace(/height="315"/, 'height="' + (($(document).width() / 16) * 9) + '"');
+          videoEmbedHTML = videoEmbedHTML.replace(/width=([0-9"]*)/, 'sandbox="allow-same-origin allow-scripts allow-forms" width="' + $(document).width() + '"');
+          videoEmbedHTML = videoEmbedHTML.replace(/height=([0-9"]*)/, 'height="' + (($(document).width() / 16) * 9) + '"');
       }
       var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
       , image = storyObj.image ? path + storyObj.image.split('/').pop() : config.missingImage
       , specialImage = storyObj["specialNameImage"] && path + storyObj["specialNameImage"].split('/').pop()
-      , feedConfig = access.getFeedsFromConfig()[access.getCurrentId()]
       , topBar = $('<div/>', {
         addClass: 'top-bar',
             text: storyObj.location + ' – ' + storyObj.pubDate
@@ -201,10 +200,6 @@ function createPage(storyObj) {
         addClass: 'page',
         "data-object": JSON.stringify(storyObj)
       });
-
-      /*if (!specialImage) {
-          page.append(topBar)
-      }*/
 
       page.append([topBar, storyTop, storySummaryContainer]);
 
@@ -249,14 +244,16 @@ function createPage(storyObj) {
                       $.ajax({
                           url: storyObj.cancelRegLink + json.email,
                           success: function (e) {
-                              cancelRegistration();
+                              cancelRegistration('' + storyObj.eventID);
+                              // notify.alert('The event was successfully cancelled.')
                           },
                           error: function (e) {
-                              notify.alert('An error occurred while registering from this event.')
+                              cancelRegistration('' + storyObj.eventID);
+                              // notify.alert('An error occurred while cancelling this event.')
                           }
                       });
                   } else {
-                      notify.alert('An error occurred while registering from this event.')
+                      // doesn't happen
                   }
               });
           }
@@ -285,9 +282,11 @@ function switchRegisterLink () {
     $('.cancel-registration').show();
 }
 
-function cancelRegistration () {
+function cancelRegistration (eventID) {
+    localRegister.remove(eventID);
     $('.has-ticket').text('Register Now').on('click', submitForm);
     $('.cancel-registration').hide();
+    updateStoryListTicketIcons(eventID);
 }
 
 // only useful after the page is ready
@@ -492,8 +491,8 @@ function submitForm (event) {
                         if (id) {
                             localRegister.add('' + id);
                             switchRegisterLink();
+                            updateStoryListTicketIcons(id);
                         }
-
                     }
                 },
                 error: function (e) {
@@ -512,7 +511,6 @@ function isEmailValid (email) {
 }
 
 function rejectFormSubmission (message) {
-    console.log(message);
     notify.alert('Tap the gear icon to provide your information.')
 }
 
@@ -531,6 +529,15 @@ $('footer.story-footer .story-add-to-schedule').on('click', function (e) {
         notify.alert('An error occurred while adding this event to your schedule');
     }
 });
+
+function updateStoryListTicketIcons (id) {
+    $('.story-list .story-item').each(function (index, item) {
+        var thisItem = $(item).find('.story-list-item-event-id');
+        if (thisItem && thisItem.text() === String(id)) {
+            $(item).find('.ticket-button').toggleClass('isRegistered', localRegister.has(id));
+        }
+    })
+}
 
 module.exports = {
     show: show,
