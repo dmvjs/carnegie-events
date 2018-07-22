@@ -104,11 +104,11 @@ section.tv .tv-container {
     position: absolute;
     overflow-y: scroll;
     overflow-x: hidden;
-    width: calc(100% - 40px);
-    margin: 20px;
+    width: calc(100% - 30px);
+    margin: 8px 15px;
     background-color: white;
     text-align: center;
-    height: calc(100% - 40px);
+    height: calc(100% - 50px);
 }
 
 /* header styles */
@@ -147,7 +147,7 @@ header .story-list,
 header .menu,
 header .tv {
     height: 44px;
-    background: url('../img/cal-logo.png');
+    background: url('../img/header-story.png');
     background-size: auto 44px;
     background-repeat: no-repeat;
     background-position: center;
@@ -162,7 +162,7 @@ header .tv {
 
 header .story {
     height: 44px;
-    background: url('../img/cal-logo.png');
+    background: url('../img/header-story.png');
     background-size: auto 44px;
     background-repeat: no-repeat;
     background-position: center;
@@ -501,6 +501,10 @@ section.story-list.active {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
     display: block;
+    background-image: url('../img/cal-bg.png');
+    background-repeat: no-repeat;
+    background-size: 50%;
+    background-position: 50%;
 }
 
 section.story-list li {
@@ -590,6 +594,12 @@ section.story-list .story-item .file-button {
     background-size: 77% 77%;
 }
 
+section.story-list .story-item .ticket-button,
+.tablet.section.story-list .story-item .ticket-button {
+    background-size: 100%;
+    float: left;
+}
+
 section.story-list .story-item .video-button {
     background-image: url('../img/choice-video.svg');
 }
@@ -601,6 +611,10 @@ section.story-list .story-item .twitter-button {
 }
 section.story-list .story-item .ticket-button {
     background-image: url('../img/choice-ticket.svg');
+}
+
+section.story-list .story-item .ticket-button.isRegistered {
+    background-image: url('../img/choice-ticket-gold.svg');
 }
 section.story-list .story-item .file-button {
     background-image: url('../img/choice-file.svg ');
@@ -651,7 +665,7 @@ section.story-list .story-item .story-title {
     margin: 0;
     height: auto;
     padding: 8px 4px;
-    max-height: 2.2em;
+    max-height: 2.8em;
     background-color: black;
 }
 
@@ -666,6 +680,11 @@ section.story-list .story-item .story-date {
     margin: 6px 4px;
     color: white;
 }
+
+.story-speakers a {
+     text-decoration: none;
+     color: #318cff;
+ }
 
 section.story-list .story-item .story-author {
     font-weight: bold;
@@ -792,7 +811,7 @@ section.menu .menu-text-container {
     padding: 10px;
 }
 
-section.menu h3 {
+section h3 {
     color: white;
     font-size: 13px;
     text-transform: uppercase;
@@ -898,8 +917,8 @@ section.menu.active, section.tv.active {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
     overflow: hidden;
-    padding-top: 24px;
-}
+    padding-top: 0;
+}s
 
 .tablet section.menu.active, .tablet section.tv.active {
     padding-top: 0;
@@ -1141,25 +1160,25 @@ section.story .has-ticket {
 }
 
 section.story .cancel-registration {
-    font-size: 0.625em;
+    font-size: 0.75em;
     border: none;
-    margin: 0;
-    line-height: 38px;
+    line-height: 37px;
 }
 
 section.story .has-ticket {
-    width: 39%;
+    width: 35%;
     border: none;
     background-image: url('../img/choice-ticket-gold.svg');
     background-repeat: no-repeat;
-    background-position: 0;
-    text-indent: 36px;
+    background-position: -5px;
+    text-indent: 30px;
     font-size: 0.75em;
 }
 
 section.story .has-ticket.is-registered {
-    color: #d68419;
-    font-size: 0.75em
+    color: #d78519;
+    font-size: 0.75em;
+    text-indent: 25px;
 }
 
 section.story .add-to-calendar {
@@ -1168,11 +1187,13 @@ section.story .add-to-calendar {
     background-image: url('../img/calendar-bg.png');
     background-repeat: no-repeat;
     background-size: 26px;
-    background-position: 0;
-    text-indent: 20px;
-    width: 42%;
+    background-position: 4px 4px;
+    text-indent: 25px;
+    width: 11em;
     font-size: 0.75em;
     float: right;
+    border: 0;
+    border-radius: 0;
 }
 
 
@@ -1292,7 +1313,7 @@ section.story .story-summary {
 }
 
 section.story .story-speaker-list-featuring {
-    margin: 8px 0;
+    margin: 28px 0 8px;
     text-transform: uppercase;
     font-size: 0.675em;
 }
@@ -1312,7 +1333,7 @@ section.story .story-speakers > ul > li {
 
 section.story .registration-container {
     overflow: auto;
-    margin: 0 16px 8px
+    margin: 15px 16px 8px;
 }
 
 
@@ -1383,8 +1404,8 @@ section.story .story-meta .story-author {
 }
 
 section.story .story-text {
-    font-family: Georgia, Times, serif;
-    margin: 0 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    margin: 30px 16px 0;
     line-height: 1.4em;
     padding-bottom: 16px;
     font-size: 1.1em;
@@ -1532,6 +1553,7 @@ section.story .story-text h3 {
      margin: 8px 0 4px;
      color: #91907b;
      text-transform: uppercase;
+     text-align: left;
  }
 
 section.story .story-text h6 {
@@ -1746,6 +1768,8 @@ section.survey {
     position: absolute;
     overflow: hidden;
 }
+
+
 
 section.twitter {
     top: 88px;
@@ -2099,18 +2123,31 @@ div#accordion strong.heading span.current span {
      margin: 20px 20px 10px;
 }
 
-.video-list-item-image img {
+.video-list-item-image-frame img {
     display: block;
     width: 100%;
 }
 
-.video-list-item-text {
-    margin: 10px 20px 20px;
+.video-list-item-text,
+.video-list-item-date {
+    margin: 20px 20px 4px;
     font-weight: bold;
-    line-height: 1.1em;
+    line-height: 1.25;
+    font-size: 1.25em;
+    text-align: left;
+}
+
+.video-list-item-date {
+    color: grey;
+    font-weight: normal;
+    margin: 4px 20px 20px;
 }
 
 /* video list end */
+
+.videoEmbed {
+    margin-bottom: -5px;
+}
 
 
 
