@@ -111,6 +111,10 @@ function getImages(feedObject) {
                 }).catch(reject);
             }
         });
+
+        if (i === 0) {
+            resolve();
+        }
     })
 }
 
