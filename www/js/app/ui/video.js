@@ -25,19 +25,30 @@ function getBestImage (thumbnails)  {
 
 function createItemDOM (element) {
     var i = element.snippet;
+    var dateArray = new Date(i.publishedAt).toString().split(' ');
     var title = $('<div/>', {
         text: i.title
-    }), thumb = $('<img/>', {
-        src: getBestImage(i.thumbnails)
+    }), frame = $('<div/>', {
+        addClass: 'video-list-item-image-frame',
+        css: {
+            backgroundImage: 'url("' + getBestImage(i.thumbnails) + '")',
+            width: $(document).width() - 70 + 'px',
+            height: ((($(document).width() - 70) / 16) * 9) + 'px',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover'
+        }
     }), imageZone = $('<div/>', {
         addClass: 'video-list-item-image'
-    }).append(thumb), textZone = $('<div/>', {
+    }).append(frame), textZone = $('<div/>', {
         addClass: 'video-list-item-text'
-    }).append([title]);
+    }).append([title]), dateZone = $('<div/>', {
+        addClass: 'video-list-item-date',
+        text: 'Posted: ' + [dateArray[0], dateArray[1], dateArray[2], dateArray[3]].join(' ')
+    });
 
     return $('<div/>', {
         addClass: 'video-list-item'
-    }).append([imageZone, textZone]).on('click', function (e) {
+    }).append([imageZone, textZone, dateZone]).on('click', function (e) {
         e.preventDefault();
         youtube.openVideo(i.resourceId.videoId, function (){});
     });
