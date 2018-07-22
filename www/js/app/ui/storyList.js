@@ -1,6 +1,7 @@
 /*global require, module, $*/
 var config = require('../config')
     , localSchedule = require('../localSchedule')
+    , localRegister = require('../localRegister')
     , localMenuView = require('../localMenuView')
     , access = require('../access')
     , connection = require('../../util/connection')
@@ -22,8 +23,9 @@ function show(feedObj, forceActive) {
         feedObj = feedObj.rss.channel;
     }
     return new Promise(function (resolve, reject) {
-        var obj = feedObj.story || feedObj.item
-            , rtl = /[\u0600-\u06FF\u0750-\u077F]/.test(feedObj.title) || feedObj.title.toLowerCase().indexOf('arabic') > -1
+        var obj = feedObj.story || feedObj.item;
+
+        var rtl = /[\u0600-\u06FF\u0750-\u077F]/.test(feedObj.title) || feedObj.title.toLowerCase().indexOf('arabic') > -1
             , fs = config.fs.toURL()
             , path = fs + (fs.substr(-1) === '/' ? '' : '/')
             , feedConfig = access.getFeedsFromConfig()[access.getCurrentId()]
@@ -52,6 +54,10 @@ function show(feedObj, forceActive) {
             , sent = false;
 
         obj.forEach(function (element) {
+            if (element.eventID === undefined) {
+                return;
+            }
+
             var isScheduled = localSchedule.has(element.eventID);
             var image = element.image ? path + element.image.split('/').pop() : config.missingImage
                 , storyTitle = $('<div/>', {
@@ -114,7 +120,7 @@ function show(feedObj, forceActive) {
                 }
             });
         });
-        
+
         var myScheduleButton = $('<div/>', {
             addClass: 'my-schedule-button',
             text: 'My Schedule'
