@@ -3,7 +3,6 @@ var story = require('./story')
 	, localSchedule = require('../localSchedule')
 	, toLocal = require('./getLocalizedString')
 	, localStrings = require('./localizedStrings')
-	, loading = require('./loading')
 	, localProfile = require('../localProfile')
 	, video = require('./video');
 

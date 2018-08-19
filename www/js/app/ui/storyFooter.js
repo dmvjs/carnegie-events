@@ -1,10 +1,10 @@
+var resource = require('./resource');
 var story = require('./story');
+var resourceContainer = $('#resource-container');
 var closeButton = $('.close-iframe').on('click', function () {
-    closeTwitterAndSurvey();
+    closeTwitterAndSurveyAndResource();
 }).hide();
-var tweetHeader = $('.tweet-header').on('click', function () {
-    openInTwitter();
-}).hide();
+var tweetHeader = $('.tweet-header').on('click', openInTwitter).hide();
 var storyCover = $('#story-cover')
     .on('touchstart', function (e) {
         e.preventDefault();
@@ -32,6 +32,7 @@ function openInTwitter () {
 
 $('footer.story-footer .twitter').on('click', function () {
     $('#survey-container').removeClass('active');
+    resource.hideResource();
     $('#twitter-container').empty();
     var data = story.getCurrentPageData();
     if (data !== undefined && data.twitterHashtag !== undefined) {
@@ -39,8 +40,27 @@ $('footer.story-footer .twitter').on('click', function () {
     }
 });
 
+$('footer.story-footer .resource').on('click', function () {
+    $('#survey-container').removeClass('active');
+    $('#twitter-container').removeClass('active');
+    var data = story.getCurrentPageData();
+    if (data && data.resourceList !== undefined) {
+        resourceContainer.empty();
+        var resourceListHTML = $('<div/>', {
+            addClass: "resource-content",
+            html: '' + (data.resourceList || '') + (data.category || '')
+        });
+        resourceContainer.append(resourceListHTML);
+    }
+
+    resource.showResource();
+    closeButton.show();
+    storyCover.show();
+});
+
 $('footer.story-footer .survey').on('click', function () {
     $('#twitter-container').removeClass('active');
+    resource.hideResource();
     var sc = $('#survey-container');
     sc.empty();
     var data = story.getCurrentPageData();
@@ -60,9 +80,11 @@ $('footer.story-footer .survey').on('click', function () {
     }
 });
 
-function closeTwitterAndSurvey () {
+function closeTwitterAndSurveyAndResource () {
     $('section.survey').removeClass('active');
     $('section.twitter').removeClass('active');
+    resource.hideResource();
+    resourceContainer.empty();
     closeButton.hide();
     tweetHeader.hide();
     storyCover.hide();

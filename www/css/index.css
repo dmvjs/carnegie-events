@@ -1403,12 +1403,20 @@ section.story .story-meta .story-author {
     font-weight: bold;
 }
 
-section.story .story-text {
+section.story .story-text,
+section.resource {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     margin: 30px 16px 0;
     line-height: 1.4em;
     padding-bottom: 16px;
     font-size: 1.1em;
+}
+
+section.resource {
+    margin: 0;
+    line-height: 2.3em;
+    padding: 0;
+    font-size: initial;
 }
 
 section.story .story-text img {
@@ -1548,21 +1556,24 @@ section.story .story-text .jumpLink.infographic {
     background-image: url('../img/story-info.png')
 }
 
-section.story .story-text h3 {
+section.story .story-text h3,
+section.resource h3 {
      font: normal 1em "Helvetica Neue", Helvetica, Arial, sans-serif;
      margin: 8px 0 4px;
      color: #91907b;
      text-transform: uppercase;
      text-align: left;
- }
+}
 
-section.story .story-text h6 {
+section.story .story-text h6,
+section.resource h6 {
     font: normal .875em "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: bold;
     margin: 8px 0 4px;
 }
 
-section.story .story-text .comments h4 {
+section.story .story-text .comments h4,
+section.resource h4 {
     font: normal 1.375em "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 16px 0 4px;
     color: #91907b;
@@ -1740,7 +1751,8 @@ footer.story-footer .story-add-to-schedule {
 }
 
 footer.story-footer .twitter,
-footer.story-footer .survey {
+footer.story-footer .survey,
+footer.story-footer .resource {
     display: inline-block;
     background-repeat: no-repeat;
     background-image: url('../img/choice-twitter-dark.svg');
@@ -1753,12 +1765,18 @@ footer.story-footer .survey {
     background-image: url('../img/choice-contact-dark.svg');
 }
 
+footer.story-footer .resource {
+    background-image: url('../img/choice-file-dark.svg');
+}
+
 .twitter-container iframe {
     border-top: 1px solid #666;
 }
 
+
 section.twitter,
-section.survey {
+section.survey,
+section.resource {
     top: 44px;
     left: 0;
     right: 0;
@@ -1769,7 +1787,29 @@ section.survey {
     overflow: hidden;
 }
 
+.resource-content {
+    margin: 3em 1.5em;
+}
 
+.resource-content a {
+    text-decoration: none;
+    font-size: 24px;
+    color: #338AFF;
+}
+
+.resource-content strong {
+    text-transform: uppercase;
+    font-weight: normal;
+}
+
+.resource-content ul {
+    margin-bottom: 2em;
+}
+
+.resource-content .Arabic {
+    float: right;
+    direction: rtl;
+}
 
 section.twitter {
     top: 88px;
@@ -1782,7 +1822,13 @@ section.twitter {
 }
 
 section.twitter.active,
-section.survey.active {
+section.survey.active,
+section.resource.active {
+    display: block;
+}
+
+section.resource {
+    top: 100%;
     display: block;
 }
 

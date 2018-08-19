@@ -3,49 +3,50 @@
 var config = require('../config')
     , localSchedule = require('../localSchedule')
     , localRegister = require('../localRegister')
-	, access = require('../access')
 	, notify = require('../../util/notify')
-    , date = require("../../util/date")
  	, browser = ['ios', 'android', 'blackberry 10', 'win32nt'].indexOf(device.platform.toLowerCase()) > -1
 	, feedObj
 	, index;
 
-if (browser) {
-  $(document).on('click', 'section.story .current a', function (e) {
-      var href = $(e.currentTarget).attr('href');
+function handleLinks (e) {
+    var href = $(e.currentTarget).attr('href');
 
     if (href && href.substr(0, 1) === '#') {
-      if (href === "#"){
-          e.preventDefault();
-          return false;
-      } else if ($('.current').find(href)) {
-        if (config.track && analytics) {
-          analytics.trackEvent('Story', 'Link', 'Page Anchor Clicked', 10);
+        if (href === "#"){
+            e.preventDefault();
+            return false;
+        } else if ($('.current').find(href)) {
+            if (config.track && analytics) {
+                analytics.trackEvent('Story', 'Link', 'Page Anchor Clicked', 10);
+            }
+            e.preventDefault();
+            $('.current').scrollTop($(href).position().top);
+        } else {
+            e.preventDefault();
+            return false;
         }
-	      e.preventDefault();
-	      $('.current').scrollTop($(href).position().top);
-      } else {
-        e.preventDefault();
-        return false;
-      }
     } else if (navigator.connection.type !== 'none') {
-      e.preventDefault();
-      if (href && href.substr(0, 6) === 'mailto') {
-        window.open(encodeURI(href), '_system', '');
-        if (config.track && analytics) {
-          analytics.trackEvent('Story', 'Link', 'Email Link Clicked', 10);
+        e.preventDefault();
+        if (href && href.substr(0, 6) === 'mailto') {
+            window.open(encodeURI(href), '_system', '');
+            if (config.track && analytics) {
+                analytics.trackEvent('Story', 'Link', 'Email Link Clicked', 10);
+            }
+        } else {
+            window.open(href, '_blank', 'location=no,toolbar=yes,enableViewportScale=yes');
+            if (config.track && analytics) {
+                analytics.trackEvent('Story', 'Link', 'External Link Clicked', 10);
+            }
         }
-      } else {
-        window.open(encodeURI(href), '_blank', 'location=no,toolbar=yes,enableViewportScale=yes');
-        if (config.track && analytics) {
-          analytics.trackEvent('Story', 'Link', 'External Link Clicked', 10);
-        }
-      }
     } else {
-      e.preventDefault();
-      notify.alert(config.connectionMessage);
+        e.preventDefault();
+        notify.alert(config.connectionMessage);
     }
-  })
+}
+
+if (browser) {
+  $(document).on('click', 'section.story .current a', handleLinks);
+  $(document).on('click', 'section.resource a', handleLinks);
 } else {
   // handle systems with no inapp browser, or don't...
 }
@@ -94,6 +95,7 @@ function show(i, feed) {
 
     $('footer.story-footer a.twitter').toggle(!!getCurrentPageData().twitterHashtag);
     $('footer.story-footer a.survey').toggle(!!getCurrentPageData().survey);
+    $('footer.story-footer a.resource').toggle(!!getCurrentPageData().resourceList);
 
       setTimeout(function () {
           resolve(200)

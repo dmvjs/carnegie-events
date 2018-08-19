@@ -1,12 +1,9 @@
 /*global require, module, $*/
 var config = require('../config')
     , localSchedule = require('../localSchedule')
-    , localRegister = require('../localRegister')
     , localMenuView = require('../localMenuView')
     , access = require('../access')
-    , connection = require('../../util/connection')
     , header = require('./header')
-    , notify = require('../../util/notify')
     , date = require('../../util/date')
     , story = require('./story')
     , refresh = require('./refresh')
