@@ -4,7 +4,8 @@ var story = require('./story')
 	, toLocal = require('./getLocalizedString')
 	, localStrings = require('./localizedStrings')
 	, localProfile = require('../localProfile')
-	, video = require('./video');
+	, video = require('./video')
+	, footer = require('./storyFooter');
 
 var youtubeIsActive = false;
 var menuIsActive = false;
@@ -14,6 +15,7 @@ $(document)
 		e.preventDefault();
 		e.stopPropagation();
 		e.stopImmediatePropagation();
+        footer.close();
 		hideTV();
 		$('.show-menu').addClass('active');
 	})
@@ -34,6 +36,7 @@ $(document)
 		e.preventDefault();
 		e.stopPropagation();
 		e.stopImmediatePropagation();
+        footer.close();
 		hideMenu();
 		//video.removeListeners();
 		$('.show-tv').addClass('active');
@@ -56,6 +59,7 @@ $(document)
 		e.preventDefault();
 		e.stopPropagation();
 		e.stopImmediatePropagation();
+        footer.close();
 		$(e.currentTarget).addClass('active');
 	})
 	.on('touchend', 'header .story .back', function (e) {
@@ -76,6 +80,7 @@ $('header a.spanner').on('touchstart', function (e) {
 	e.preventDefault();
 	e.stopImmediatePropagation();
 	hideMenu();
+    footer.close();
 	hideTV();
 });
 
@@ -121,6 +126,7 @@ function addListener(className) {
 }
 
 function show(sel) {
+    footer.close();
 	var sels = ['.story', '.story-list']
 		, $h = $('header')
 		, $sel = $h.find(sel).stop(true);

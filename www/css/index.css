@@ -1784,12 +1784,13 @@ section.resource {
     background-color: white;
     z-index: 2147483610 !important;
     position: absolute;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .resource-content {
     margin: 3em 1.5em;
     color: black;
+    overflow-y: scroll;
 }
 
 .resource-content a {

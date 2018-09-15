@@ -93,10 +93,10 @@ function show(feedObj, forceActive) {
             })
             .append(checkButton)
             .append(!!element.regLink ? ticketButton : null)
-            .append(!!element.livestream && element.liveStream !== "False" ? videoButton : null)
-            .append(element.twitterID !== undefined ? twitterButton : null)
-            .append(!!element.survey ? contactButton : null)
-            .append(!!element.resourceList ? fileButton : null)
+            .append(!!element.videoEmbed ? videoButton : null)
+            //.append(element.twitterID !== undefined ? twitterButton : null)
+            //.append(!!element.survey ? contactButton : null)
+            //.append(!!element.resourceList ? fileButton : null)
                 , storyItem = $('<div/>', {
                 addClass: 'story-item'
             }).append([storyEventID, hairline, storyImage, storyText, choiceBar])

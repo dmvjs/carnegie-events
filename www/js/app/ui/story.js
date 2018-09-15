@@ -95,7 +95,7 @@ function show(i, feed) {
 
     $('footer.story-footer a.twitter').toggle(!!getCurrentPageData().twitterHashtag);
     $('footer.story-footer a.survey').toggle(!!getCurrentPageData().survey);
-    $('footer.story-footer a.resource').toggle(!!getCurrentPageData().resourceList);
+    $('footer.story-footer a.resource').toggle(!!(getCurrentPageData().resourceList || getCurrentPageData().category));
 
       setTimeout(function () {
           resolve(200)

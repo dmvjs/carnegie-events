@@ -7,4 +7,4 @@ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ~/Apps/certs/ca
 
 ~/Apps/carnegie-global-not/platforms/android/build/outputs/apk/zipalign -v 4 platforms/android/build/outputs/apk/android-release-unsigned.apk platforms/android/build/outputs/apk/Events.apk
 
-cd platforms/android/build/outputs/apk/ && open .
+cd platforms/android/build/outputs/apk/ && rm -r CarnegieEvents.apk; mv Events.apk CarnegieEvents.apk && open .

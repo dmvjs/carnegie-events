@@ -44,7 +44,7 @@ $('footer.story-footer .resource').on('click', function () {
     $('#survey-container').removeClass('active');
     $('#twitter-container').removeClass('active');
     var data = story.getCurrentPageData();
-    if (data && data.resourceList !== undefined) {
+    if (data && (data.resourceList || data.category)) {
         resourceContainer.empty();
         var resourceListHTML = $('<div/>', {
             addClass: "resource-content",
@@ -68,7 +68,6 @@ $('footer.story-footer .survey').on('click', function () {
         var iframe = document.createElement('iframe');
         var $body = $(window.document.body);
         $body.hasClass('tablet');
-        iframe.scrolling = 'no';
         iframe.width = '100%';
         iframe.height = '' + $('#survey-container').height() + 'px';
         iframe.src = data.survey;
@@ -89,3 +88,5 @@ function closeTwitterAndSurveyAndResource () {
     tweetHeader.hide();
     storyCover.hide();
 }
+
+module.exports = {close: closeTwitterAndSurveyAndResource};
